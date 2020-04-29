@@ -2,7 +2,7 @@ class Game
 
   def start_new_game
     puts "\tPlayer 1 is 'X'. Player 2 is 'O'. "
-  puts ""
+    puts ""
     @board = Board.new
     @player1 = Player.new('X')
     @player2 = Player.new('O')
@@ -16,7 +16,7 @@ class Game
       player_two_play
     end
   end
-
+  
   def prompt_to_play_again
     puts ""
     puts "play again? Enter Y or N"
