@@ -156,7 +156,4 @@ def check_if_player_two_wins
 end
 
 @game = Game.new
-@player1 = Player.new('X')
-@player2 = Player.new('O')
-
 @game.start_new_game
