@@ -20,6 +20,8 @@ class Board
     HEREDOC
   end
 
+  
+
 end
 
 class CodeMaker
@@ -70,47 +72,49 @@ end
 
 class CodeBreaker
 
-  def initialize(other, board)
-    @codemaker = other
+  def initialize(codemaker, board, game)
+    @codemaker = codemaker
     @board = board
-  end
-
-  def guess
-    #after four colors are placed, increment @number_of_rounds by 1. 
-    #display board with positions updated to show colors
-    Game.increment_number_of_rounds
-    puts "make a guess"
-    guess = gets.chomp.downcase
-    @board.positions[1] = guess
-    guess == @codemaker.winning_code[0] ? "Yes" : "No"
-    
+    @game = game
   end
 
   def generate_colors
     @codemaker.generate_colors
   end
 
+  def guess(color)
+    #after four colors are placed, increment @number_of_rounds by 1. 
+    #display board with positions updated to show colors
+    @game.increment_number_of_rounds
+    # puts "make a guess"
+    # guess = gets.chomp.downcase
+    @board.positions[1] = color
+    @board.display
+    color == @codemaker.winning_code[0] ? "Yes" : "No"
+  end
 
+  def feedback
+
+  end
 end
 
 class Game
   def initialize
-    @@number_of_rounds = 0
- 
+    @number_of_rounds = 0
   end
 
-  def self.increment_number_of_rounds
-    @@number_of_rounds += 1
+  def increment_number_of_rounds
+    @number_of_rounds += 1
   end
 
   def number_of_rounds
-    @@number_of_rounds
+    @number_of_rounds
   end
 
   def over?
     game_over = false
     #if @number_of_rounds == 10, announce game is over and show winning_code
-    if @@number_of_rounds == 10
+    if @number_of_rounds == 10
       game_over = true
       puts "Game Over!"
       puts "winning code is " #show board positions with colors populated
@@ -123,4 +127,4 @@ end
 @game = Game.new
 @board = Board.new({1=>"[ ]", 2=>"[ ]", 3=>"[ ]", 4=>"[ ]"}, {1=>"@", 2=>"@", 3=> "@", 4=>"@"})
 # @codemaker = CodeMaker.new(["placeholder", "red", "green", "purple", "yellow", "orange", "brown"])
-@codebreaker = CodeBreaker.new(CodeMaker.new(["placeholder", "red", "green", "purple", "yellow", "orange", "brown"]), @board)
+@codebreaker = CodeBreaker.new(CodeMaker.new(["placeholder", "red", "green", "purple", "yellow", "orange", "brown"]), @board, @game)
