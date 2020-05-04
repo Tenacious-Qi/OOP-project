@@ -126,4 +126,4 @@ end
 @board = Board.new({1=>"[ ]", 2=>"[ ]", 3=>"[ ]", 4=>"[ ]"}, {1=>"@", 2=>"@", 3=> "@", 4=>"@"})
 @codemaker = CodeMaker.new(["placeholder", "red", "green", "purple", "yellow", "orange", "brown"])
 @game = Game.new(@codemaker, @board)
-# @game.generate_colors
+
