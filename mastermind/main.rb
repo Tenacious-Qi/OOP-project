@@ -91,7 +91,6 @@ class Game
   def initialize(codemaker, board)
     @codemaker = codemaker
     @board = board
-    @guessed_colors = []
     generate_colors
   end
 
@@ -100,25 +99,22 @@ class Game
   end
 
   def guess
-    guessed_colors = []
     round_complete = false
     #after four colors are placed, increment @number_of_rounds by 1. 
     #display board with positions updated to show colors
     i = 1
-    until @board.colors_placed == 4
+    until round_complete
       puts "make a guess at position #{i}"
       color = gets.chomp.strip.downcase
       @board.positions[i] = color
       @board.colors_placed += 1
-      guessed_colors << color
       i += 1
-      round_complete = true
+      round_complete = true if @board.colors_placed == 4
     end
     if round_complete
-      @guessed_colors = guessed_colors
+      provide_feedback
       @board.increment_number_of_rounds
       @board.display(@board.number_of_rounds)
-      provide_feedback
     end
     @board.colors_placed = 0
     @board.positions = {1=>"[ ]", 2=>"[ ]", 3=>"[ ]", 4=>"[ ]"}   
