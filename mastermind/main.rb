@@ -116,14 +116,18 @@ class Game
       @board.colors_placed += 1
       i += 1
     end
+    @board.increment_number_of_rounds
+  end
+
+  def winning_code
+    @codemaker.winning_code
   end
 
   def feedback
   end
 end
 
-@round_controller = RoundController.new
 @board = Board.new({1=>"[ ]", 2=>"[ ]", 3=>"[ ]", 4=>"[ ]"}, {1=>"@", 2=>"@", 3=> "@", 4=>"@"})
-# @codemaker = CodeMaker.new(["placeholder", "red", "green", "purple", "yellow", "orange", "brown"])
-@game = Game.new(CodeMaker.new(["placeholder", "red", "green", "purple", "yellow", "orange", "brown"]), @board, @round_controller)
+@codemaker = CodeMaker.new(["placeholder", "red", "green", "purple", "yellow", "orange", "brown"])
+@game = Game.new(@codemaker, @board, @round_controller)
 @game.generate_colors
