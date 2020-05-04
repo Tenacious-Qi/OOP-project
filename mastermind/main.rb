@@ -14,9 +14,9 @@ class Board
 
     puts <<-HEREDOC
 
-                          #{indicators[1]} #{indicators[2]}       
+                                          #{indicators[1]} #{indicators[2]}       
        #{round_number}: #{positions[1]}  #{positions[2]}  #{positions[3]}  #{positions[4]}
-                          #{indicators[3]} #{indicators[4]}
+                                          #{indicators[3]} #{indicators[4]}
 
     HEREDOC
   end
@@ -80,7 +80,9 @@ class CodeMaker
   
   def provide_feedback
     #logic for determining how to color indicators
-    puts "feedback"
+    if @board.positions[1] == @winning_code[0]
+      puts "first matches"
+    end
   end
 end
 
@@ -89,6 +91,7 @@ class Game
   def initialize(codemaker, board)
     @codemaker = codemaker
     @board = board
+    @guessed_colors = []
     generate_colors
   end
 
@@ -97,29 +100,42 @@ class Game
   end
 
   def guess
+    guessed_colors = []
+    round_complete = false
     #after four colors are placed, increment @number_of_rounds by 1. 
     #display board with positions updated to show colors
     i = 1
     until @board.colors_placed == 4
       puts "make a guess at position #{i}"
-      color = gets.chomp.downcase
+      color = gets.chomp.strip.downcase
       @board.positions[i] = color
       @board.colors_placed += 1
+      guessed_colors << color
       i += 1
+      round_complete = true
     end
-    @board.increment_number_of_rounds
-    @board.display(@board.number_of_rounds)
+    if round_complete
+      @guessed_colors = guessed_colors
+      @board.increment_number_of_rounds
+      @board.display(@board.number_of_rounds)
+      provide_feedback
+    end
+    @board.colors_placed = 0
+    @board.positions = {1=>"[ ]", 2=>"[ ]", 3=>"[ ]", 4=>"[ ]"}   
   end
 
   def winning_code
     @codemaker.winning_code
   end
 
-  def feedback
+  def provide_feedback
+    puts "here is some feedback"
+    if @board.positions[1] == winning_code[0]
+      puts "one color has matched"
+    end
   end
 end
 
 @board = Board.new({1=>"[ ]", 2=>"[ ]", 3=>"[ ]", 4=>"[ ]"}, {1=>"@", 2=>"@", 3=> "@", 4=>"@"})
 @codemaker = CodeMaker.new(["placeholder", "red", "green", "purple", "yellow", "orange", "brown"])
 @game = Game.new(@codemaker, @board)
-
