@@ -1,7 +1,7 @@
 require 'colorize'
 
 class Board
-  attr_accessor :positions, :indicators, :colors_placed
+  attr_accessor :positions, :indicators, :colors_placed, :number_of_rounds
 
   def initialize(positions, indicators)
     @positions = positions
@@ -24,10 +24,6 @@ class Board
 
   def increment_number_of_rounds
     @number_of_rounds += 1
-  end
-
-  def number_of_rounds
-    @number_of_rounds
   end
 
   def over?
@@ -97,6 +93,7 @@ class Game
   def initialize(codemaker, board)
     @codemaker = codemaker
     @board = board
+    generate_colors
   end
 
   def generate_colors
@@ -129,4 +126,4 @@ end
 @board = Board.new({1=>"[ ]", 2=>"[ ]", 3=>"[ ]", 4=>"[ ]"}, {1=>"@", 2=>"@", 3=> "@", 4=>"@"})
 @codemaker = CodeMaker.new(["placeholder", "red", "green", "purple", "yellow", "orange", "brown"])
 @game = Game.new(@codemaker, @board)
-@game.generate_colors
+# @game.generate_colors
