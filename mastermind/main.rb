@@ -94,10 +94,9 @@ end
 
 class Game
 
-  def initialize(codemaker, board, round_controller)
+  def initialize(codemaker, board)
     @codemaker = codemaker
     @board = board
-    # @round_controller = round_controller
   end
 
   def generate_colors
@@ -129,5 +128,5 @@ end
 
 @board = Board.new({1=>"[ ]", 2=>"[ ]", 3=>"[ ]", 4=>"[ ]"}, {1=>"@", 2=>"@", 3=> "@", 4=>"@"})
 @codemaker = CodeMaker.new(["placeholder", "red", "green", "purple", "yellow", "orange", "brown"])
-@game = Game.new(@codemaker, @board, @round_controller)
+@game = Game.new(@codemaker, @board)
 @game.generate_colors
