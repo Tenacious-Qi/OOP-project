@@ -7,6 +7,7 @@ class Board
     @positions = positions
     @indicators = indicators
     @colors_placed = 0
+    @number_of_rounds = 0
   end
   
   
@@ -21,6 +22,25 @@ class Board
     HEREDOC
   end
 
+  def increment_number_of_rounds
+    @number_of_rounds += 1
+  end
+
+  def number_of_rounds
+    @number_of_rounds
+  end
+
+  def over?
+    game_over = false
+    #if @number_of_rounds == 10, announce game is over and show winning_code
+    if @number_of_rounds == 10
+      game_over = true
+      puts "Game Over!"
+      puts "winning code is " #show board positions with colors populated
+      puts "play again?"
+    end
+    game_over
+  end
   
 
 end
@@ -77,10 +97,8 @@ class Game
   def initialize(codemaker, board, round_controller)
     @codemaker = codemaker
     @board = board
-    @round_controller = round_controller
+    # @round_controller = round_controller
   end
-
-
 
   def generate_colors
     @codemaker.generate_colors
@@ -89,44 +107,18 @@ class Game
   def guess
     #after four colors are placed, increment @number_of_rounds by 1. 
     #display board with positions updated to show colors
-    
-    puts "make a guess"
-    color = gets.chomp.downcase
-    @board.positions[1] = color
-    @board.display
-    color == @codemaker.winning_code[0] ? "Yes" : "No"
-    @round_controller.increment_number_of_rounds
-    @board.colors_placed += 1
+    i = 1
+    until @board.colors_placed == 4
+      puts "make a guess at position #{i}"
+      color = gets.chomp.downcase
+      @board.positions[i] = color
+      @board.display
+      @board.colors_placed += 1
+      i += 1
+    end
   end
 
   def feedback
-
-  end
-end
-
-class RoundController
-  def initialize
-    @number_of_rounds = 0
-  end
-
-  def increment_number_of_rounds
-    @number_of_rounds += 1
-  end
-
-  def number_of_rounds
-    @number_of_rounds
-  end
-
-  def over?
-    game_over = false
-    #if @number_of_rounds == 10, announce game is over and show winning_code
-    if @number_of_rounds == 10
-      game_over = true
-      puts "Game Over!"
-      puts "winning code is " #show board positions with colors populated
-      puts "play again?"
-    end
-    game_over
   end
 end
 
