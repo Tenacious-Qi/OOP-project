@@ -1,5 +1,43 @@
 require 'colorize'
 
+class Game
+
+  def initialize(codemaker, board)
+    @codemaker = codemaker
+    @board = board
+    @board = Board.new({1=>"[ ]", 2=>"[ ]", 3=>"[ ]", 4=>"[ ]"}, {1=>"@", 2=>"@", 3=> "@", 4=>"@"})
+    @codemaker = CodeMaker.new(["placeholder", "red", "green", "purple", "yellow", "orange", "brown"])
+    generate_colors
+    # guess
+  end
+
+  def generate_colors
+    @codemaker.generate_colors
+  end
+
+  def guess
+    #after four colors are placed, increment @number_of_rounds by 1. 
+    #display board with positions updated to show colors
+    i = 1
+    until @board.colors_placed == 4
+      puts "make a guess at position #{i}"
+      color = gets.chomp.downcase
+      @board.positions[i] = color
+      @board.display
+      @board.colors_placed += 1
+      i += 1
+    end
+    @board.increment_number_of_rounds
+  end
+
+  def winning_code
+    @codemaker.winning_code
+  end
+
+  def feedback
+  end
+end
+
 class Board
   attr_accessor :positions, :indicators, :colors_placed, :number_of_rounds
 
@@ -55,7 +93,7 @@ class CodeMaker
     #prevent duplicates. only push to winning_code if color not present. ensure there are 4 colors randomly selected
     until random_nums.count == 4
       random_num = (rand * 6).floor + 1
-      print "#{random_num} "
+      # print "#{random_num} "
         case
         when random_num == 1 && !winning_code.include?(colors[1])
           random_nums << random_num
@@ -88,42 +126,5 @@ class CodeMaker
 
 end
 
-class Game
-
-  def initialize(codemaker, board)
-    @codemaker = codemaker
-    @board = board
-    generate_colors
-  end
-
-  def generate_colors
-    @codemaker.generate_colors
-  end
-
-  def guess
-    #after four colors are placed, increment @number_of_rounds by 1. 
-    #display board with positions updated to show colors
-    i = 1
-    until @board.colors_placed == 4
-      puts "make a guess at position #{i}"
-      color = gets.chomp.downcase
-      @board.positions[i] = color
-      @board.display
-      @board.colors_placed += 1
-      i += 1
-    end
-    @board.increment_number_of_rounds
-  end
-
-  def winning_code
-    @codemaker.winning_code
-  end
-
-  def feedback
-  end
-end
-
-@board = Board.new({1=>"[ ]", 2=>"[ ]", 3=>"[ ]", 4=>"[ ]"}, {1=>"@", 2=>"@", 3=> "@", 4=>"@"})
-@codemaker = CodeMaker.new(["placeholder", "red", "green", "purple", "yellow", "orange", "brown"])
 @game = Game.new(@codemaker, @board)
-# @game.generate_colors
+
