@@ -10,13 +10,12 @@ class Board
     @number_of_rounds = 0
   end
   
-  
-  def display
+  def display(round_number)
 
     puts <<-HEREDOC
 
                           #{indicators[1]} #{indicators[2]}       
-       #{positions[1]}  #{positions[2]}  #{positions[3]}  #{positions[4]}
+       #{round_number}: #{positions[1]}  #{positions[2]}  #{positions[3]}  #{positions[4]}
                           #{indicators[3]} #{indicators[4]}
 
     HEREDOC
@@ -37,8 +36,6 @@ class Board
     end
     game_over
   end
-  
-
 end
 
 class CodeMaker
@@ -85,7 +82,6 @@ class CodeMaker
     #logic for determining how to color indicators
     puts "feedback"
   end
-
 end
 
 class Game
@@ -108,11 +104,11 @@ class Game
       puts "make a guess at position #{i}"
       color = gets.chomp.downcase
       @board.positions[i] = color
-      @board.display
       @board.colors_placed += 1
       i += 1
     end
     @board.increment_number_of_rounds
+    @board.display(@board.number_of_rounds)
   end
 
   def winning_code
