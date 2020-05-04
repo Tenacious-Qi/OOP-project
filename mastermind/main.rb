@@ -1,11 +1,12 @@
 require 'colorize'
 
 class Board
-  attr_accessor :positions, :indicators
+  attr_accessor :positions, :indicators, :colors_placed
 
   def initialize(positions, indicators)
     @positions = positions
     @indicators = indicators
+    @colors_placed = 0
   end
   
   
@@ -39,22 +40,23 @@ class CodeMaker
     until random_nums.count == 4
       random_num = (rand * 6).floor + 1
       print "#{random_num} "
-        if random_num == 1
+        case
+        when random_num == 1 && !winning_code.include?(colors[1])
+          random_nums << random_num
           winning_code << colors[1]
+        when random_num == 2 && !winning_code.include?(colors[2])
           random_nums << random_num
-        elsif random_num == 2 && !winning_code.include?(colors[2])
           winning_code << colors[2]
+        when random_num == 3 && !winning_code.include?(colors[3])
           random_nums << random_num
-        elsif random_num == 3 && !winning_code.include?(colors[3])
           winning_code << colors[3]
+        when random_num == 4 && !winning_code.include?(colors[4])
           random_nums << random_num
-        elsif random_num == 4 && !winning_code.include?(colors[4])
           winning_code << colors[4]
-          random_nums << random_num
-        elsif random_num == 5 && !winning_code.include?(colors[5])
+        when random_num == 5 && !winning_code.include?(colors[5])
           winning_code << colors[5]
           random_nums << random_num
-        elsif random_num == 6 && !winning_code.include?(colors[6])
+        when random_num == 6 && !winning_code.include?(colors[6])
           winning_code << colors[6]
           random_nums << random_num
         end
@@ -78,19 +80,23 @@ class Game
     @round_controller = round_controller
   end
 
+
+
   def generate_colors
     @codemaker.generate_colors
   end
 
-  def guess(color)
+  def guess
     #after four colors are placed, increment @number_of_rounds by 1. 
     #display board with positions updated to show colors
-    @game.increment_number_of_rounds
-    # puts "make a guess"
-    # guess = gets.chomp.downcase
+    
+    puts "make a guess"
+    color = gets.chomp.downcase
     @board.positions[1] = color
     @board.display
     color == @codemaker.winning_code[0] ? "Yes" : "No"
+    @round_controller.increment_number_of_rounds
+    @board.colors_placed += 1
   end
 
   def feedback
@@ -128,3 +134,4 @@ end
 @board = Board.new({1=>"[ ]", 2=>"[ ]", 3=>"[ ]", 4=>"[ ]"}, {1=>"@", 2=>"@", 3=> "@", 4=>"@"})
 # @codemaker = CodeMaker.new(["placeholder", "red", "green", "purple", "yellow", "orange", "brown"])
 @game = Game.new(CodeMaker.new(["placeholder", "red", "green", "purple", "yellow", "orange", "brown"]), @board, @round_controller)
+@game.generate_colors
