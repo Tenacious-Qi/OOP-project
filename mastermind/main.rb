@@ -70,12 +70,12 @@ class CodeMaker
 
 end
 
-class CodeBreaker
+class Game
 
-  def initialize(codemaker, board, game)
+  def initialize(codemaker, board, round_controller)
     @codemaker = codemaker
     @board = board
-    @game = game
+    @round_controller = round_controller
   end
 
   def generate_colors
@@ -98,7 +98,7 @@ class CodeBreaker
   end
 end
 
-class Game
+class RoundController
   def initialize
     @number_of_rounds = 0
   end
@@ -124,7 +124,7 @@ class Game
   end
 end
 
-@game = Game.new
+@round_controller = RoundController.new
 @board = Board.new({1=>"[ ]", 2=>"[ ]", 3=>"[ ]", 4=>"[ ]"}, {1=>"@", 2=>"@", 3=> "@", 4=>"@"})
 # @codemaker = CodeMaker.new(["placeholder", "red", "green", "purple", "yellow", "orange", "brown"])
-@codebreaker = CodeBreaker.new(CodeMaker.new(["placeholder", "red", "green", "purple", "yellow", "orange", "brown"]), @board, @game)
+@game = Game.new(CodeMaker.new(["placeholder", "red", "green", "purple", "yellow", "orange", "brown"]), @board, @round_controller)
