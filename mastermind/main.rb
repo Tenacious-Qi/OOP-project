@@ -3,11 +3,12 @@ require 'colorize'
 class Board
   attr_accessor :positions, :indicators
 
-  def initialize
-    @positions = {1=>"[ ]", 2=>"[ ]", 3=>"[ ]", 4=>"[ ]"}
-    @indicators = {1=>"@", 2=>"@", 3=> "@", 4=>"@"}
+  def initialize(positions, indicators)
+    @positions = positions
+    @indicators = indicators
   end
-
+  
+  
   def display
 
     puts <<-HEREDOC
@@ -22,45 +23,42 @@ class Board
 end
 
 class CodeMaker
-  attr_accessor :colors
+  attr_accessor :colors, :winning_code
   
-  def initialize
-    @@colors = ["placeholder", "red", "green", "purple", "yellow", "orange", "brown"]
-    @@winning_code = []
+  def initialize(colors)
+    @colors = colors
+    @winning_code = []
   end
 
-  def self.winning_code
-    @@winning_code
-  end
-
-  def self.generate_colors
-    # @@winning_code = []
+  def generate_colors
+    winning_code = []
     random_nums = []
-    #prevent duplicates. only push to @@winning_code if color not present. ensure there are 4 @@colors randomly selected
+    #prevent duplicates. only push to winning_code if color not present. ensure there are 4 colors randomly selected
     until random_nums.count == 4
       random_num = (rand * 6).floor + 1
       print "#{random_num} "
         if random_num == 1
-          @@winning_code << @@colors[1]
+          winning_code << colors[1]
           random_nums << random_num
-        elsif random_num == 2 && !@@winning_code.include?(@@colors[2])
-          @@winning_code << @@colors[2]
+        elsif random_num == 2 && !winning_code.include?(colors[2])
+          winning_code << colors[2]
           random_nums << random_num
-        elsif random_num == 3 && !@@winning_code.include?(@@colors[3])
-          @@winning_code << @@colors[3]
+        elsif random_num == 3 && !winning_code.include?(colors[3])
+          winning_code << colors[3]
           random_nums << random_num
-        elsif random_num == 4 && !@@winning_code.include?(@@colors[4])
-          @@winning_code << @@colors[4]
+        elsif random_num == 4 && !winning_code.include?(colors[4])
+          winning_code << colors[4]
           random_nums << random_num
-        elsif random_num == 5 && !@@winning_code.include?(@@colors[5])
-          @@winning_code << @@colors[5]
+        elsif random_num == 5 && !winning_code.include?(colors[5])
+          winning_code << colors[5]
           random_nums << random_num
-        elsif random_num == 6 && !@@winning_code.include?(@@colors[6])
-          @@winning_code << @@colors[6]
+        elsif random_num == 6 && !winning_code.include?(colors[6])
+          winning_code << colors[6]
           random_nums << random_num
         end
     end
-    @@winning_code
+    @winning_code = winning_code
+    winning_code
   end
   
   def provide_feedback
@@ -72,16 +70,26 @@ end
 
 class CodeBreaker
 
+  def initialize(other, board)
+    @codemaker = other
+    @board = board
+  end
+
   def guess
-    #after four @@colors are placed, increment @number_of_rounds by 1. 
-    #display board with positions updated to show @@colors
+    #after four colors are placed, increment @number_of_rounds by 1. 
+    #display board with positions updated to show colors
     Game.increment_number_of_rounds
     puts "make a guess"
     guess = gets.chomp.downcase
-    guess == CodeMaker.winning_code[0] ? "Yes" : "No"
+    @board.positions[1] = guess
+    guess == @codemaker.winning_code[0] ? "Yes" : "No"
     
   end
-  
+
+  def generate_colors
+    @codemaker.generate_colors
+  end
+
 
 end
 
@@ -99,17 +107,13 @@ class Game
     @@number_of_rounds
   end
 
-  def call_guess
-    @codebreaker.guess
-  end
-
   def over?
     game_over = false
-    #if @number_of_rounds == 10, announce game is over and show @@winning_code
+    #if @number_of_rounds == 10, announce game is over and show winning_code
     if @@number_of_rounds == 10
       game_over = true
       puts "Game Over!"
-      puts "winning code is " #show board positions with @@colors populated
+      puts "winning code is " #show board positions with colors populated
       puts "play again?"
     end
     game_over
@@ -117,6 +121,6 @@ class Game
 end
 
 @game = Game.new
-@board = Board.new
-@codemaker = CodeMaker.new
-@codebreaker = CodeBreaker.new 
+@board = Board.new({1=>"[ ]", 2=>"[ ]", 3=>"[ ]", 4=>"[ ]"}, {1=>"@", 2=>"@", 3=> "@", 4=>"@"})
+# @codemaker = CodeMaker.new(["placeholder", "red", "green", "purple", "yellow", "orange", "brown"])
+@codebreaker = CodeBreaker.new(CodeMaker.new(["placeholder", "red", "green", "purple", "yellow", "orange", "brown"]), @board)
