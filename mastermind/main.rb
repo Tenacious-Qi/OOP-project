@@ -159,12 +159,13 @@ class Game
   end
 
   def provide_feedback
-    indicator_color_only = "@"
-    indicator_color_and_position = "@".colorize(:background => :black, :color => :light_white)
+    indicator_color_only = "@".colorize(:background => :white, :color => :light_black)
+    indicator_color_and_position = "@".colorize(:background => :light_red, :color => :light_white)
     puts "\nresults of round #{@board.number_of_rounds}: \n"
     matches = @board.positions
     if @board.positions == @codemaker.winning_code
       puts "you win. your code matched winning code of #{winning_code}"
+      @board.indicators.each_with_index { |indicator, index| indicator[0] = indicator_color_and_position }
     elsif @board.positions[0] == @codemaker.winning_code[0]
       @board.indicators[0] = indicator_color_and_position
       #testing how indicators look
@@ -175,6 +176,6 @@ class Game
   end
 end
 
-@board = Board.new([], [])
+@board = Board.new([], ["", "", "", ""])
 @codemaker = CodeMaker.new(["red", "green", "magenta", "yellow", "blue", "black"])
 @game = Game.new(@codemaker, @board)
