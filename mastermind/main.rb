@@ -15,7 +15,7 @@ class Board
     puts <<-HEREDOC
 
                                           #{indicators[0]} #{indicators[1]}       
-        #{positions[0]}  #{positions[1]}  #{positions[2]}  #{positions[3]}
+       { one: #{positions[0].to_s.colorize(:color => :light_white, :background => Game.color_choices[0])} | two: #{positions[1].to_s.colorize(:color => :light_white, :background => Game.color_choices[1])} | three: #{positions[2].to_s.colorize(:color => :light_white, :background => Game.color_choices[2])} | four: #{positions[3].to_s.colorize(:color => :light_white, :background => Game.color_choices[3])} }
                                           #{indicators[2]} #{indicators[3]}
 
     HEREDOC
@@ -80,6 +80,8 @@ class CodeMaker
 end
 
 class Game
+  #used for purpse of colorizing chosen colors each round
+  @@color_choices = [] 
 
   def initialize(codemaker, board)
     @codemaker = codemaker
@@ -91,28 +93,35 @@ class Game
     @codemaker.generate_colors
   end
 
+  def self.color_choices
+    @@color_choices
+  end
+
   def show_message
     puts <<-HEREDOC
 
     Welcome to Mastermind!
 
-    We will play 10 rounds. Try to guess code in 10 rounds.
-    Code will be revealed after 10 rounds or upon guessing correct code.
+  # From a selection of 6 colors, computer has generated a sequence of 4 different colors at four positions. 
+  # Colors do not repeat.
+  # Try to match your colors to the computer's generated code.
+  # You have ten rounds to solve the puzzle.
+  # Code will revealed upon playing 10 rounds or solving the puzzle, whichever comes first.
+  # Good luck!
 
-                            #{"red".red} #{"green".green} #{"purple".magenta}
-    Your color choices are: 
-                            #{"yellow".yellow} #{"blue".blue} #{"black".light_black}
 
     HEREDOC
+
+    show_color_choices
   end
 
   def show_color_choices
     puts <<-HEREDOC
 
-                            #{"red".red} #{"green".green} #{"purple".magenta}
-    Your color choices are: 
-                            #{"yellow".yellow} #{"blue".blue} #{"black".light_black}
-
+                      #{"red".colorize(:background => :red, :color => :light_white)} #{"green".colorize(:background => :green, :color => :light_white)} #{"magenta".colorize(:background => :magenta, :color => :light_white)}
+    Available colors:
+                      #{"yellow".colorize(:background => :yellow, :color => :light_white)} #{"blue".colorize(:background => :blue, :color => :light_white)} #{"black".colorize(:background => :black, :color => :light_white)}
+  
     HEREDOC
   end
 
@@ -126,6 +135,7 @@ class Game
       until round_complete
         print "make a guess at position #{i + 1}: "
         color = gets.chomp.strip.downcase
+        @@color_choices << color.to_sym
         @board.positions[i] = color
         @board.colors_placed += 1
         i += 1
@@ -138,7 +148,11 @@ class Game
       end
       reset_positions
     end
-    @board.number_of_rounds = 0  
+    if @board.number_of_rounds == 10
+      @board.number_of_rounds = 0
+      puts "Game over: winning code is #{@codemaker.winning_code}"
+    end
+    #prompt to play again, reset stuff if yes, else exit
   end
 
   def winning_code
@@ -147,17 +161,20 @@ class Game
 
   def reset_positions
     @board.colors_placed = 0
-    @board.positions = {1=>"[ ]", 2=>"[ ]", 3=>"[ ]", 4=>"[ ]"} 
+    @board.positions = []
+    #reset indicators
+    @@color_choices = []
   end
 
   def provide_feedback
     puts "\nresults of round #{@board.number_of_rounds}: \n"
-    if @board.positions[0] == winning_code[0]
-      puts "\none color has matched"
+    matches = @board.positions
+    if @board.positions == @codemaker.winning_code
+      puts "you win. your code matched winning code of #{winning_code}"
     end
   end
 end
 
-@board = Board.new({0=>"[ ]", 1=>"[ ]", 2=>"[ ]", 3=>"[ ]"}, {0=>"@", 1=>"@", 2=> "@", 3=>"@"})
-@codemaker = CodeMaker.new(["red", "green", "purple", "yellow", "blue", "black"])
+@board = Board.new([], [])
+@codemaker = CodeMaker.new(["red", "green", "magenta", "yellow", "blue", "black"])
 @game = Game.new(@codemaker, @board)
