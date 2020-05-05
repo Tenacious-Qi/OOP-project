@@ -14,9 +14,10 @@ class Board
 
     puts <<-HEREDOC
 
-                                          #{indicators[0]} #{indicators[1]}       
-       { one: #{positions[0].to_s.colorize(:color => :light_white, :background => Game.color_choices[0])} | two: #{positions[1].to_s.colorize(:color => :light_white, :background => Game.color_choices[1])} | three: #{positions[2].to_s.colorize(:color => :light_white, :background => Game.color_choices[2])} | four: #{positions[3].to_s.colorize(:color => :light_white, :background => Game.color_choices[3])} }
-                                          #{indicators[2]} #{indicators[3]}
+    #{indicators[0]} #{indicators[1]}
+    #{indicators[2]} #{indicators[3]} { one: #{positions[0].to_s.colorize(:color => :light_white, :background => Game.color_choices[0])} | two: #{positions[1].to_s.colorize(:color => :light_white, :background => Game.color_choices[1])} | three: #{positions[2].to_s.colorize(:color => :light_white, :background => Game.color_choices[2])} | four: #{positions[3].to_s.colorize(:color => :light_white, :background => Game.color_choices[3])} }
+
+
 
     HEREDOC
   end
@@ -25,17 +26,6 @@ class Board
     @number_of_rounds += 1
   end
 
-  def over?
-    game_over = false
-    #if @number_of_rounds == 10, announce game is over and show winning_code
-    if @number_of_rounds == 10
-      game_over = true
-      puts "Game Over!"
-      puts "winning code is " #show board positions with colors populated
-      puts "play again?"
-    end
-    game_over
-  end
 end
 
 class CodeMaker
@@ -86,6 +76,7 @@ class Game
   def initialize(codemaker, board)
     @codemaker = codemaker
     @board = board
+    @game_over = false
     generate_colors
   end
 
@@ -163,14 +154,23 @@ class Game
     @board.colors_placed = 0
     @board.positions = []
     #reset indicators
+    @board.indicators = []
     @@color_choices = []
   end
 
   def provide_feedback
+    indicator_color_only = "@"
+    indicator_color_and_position = "@".colorize(:background => :black, :color => :light_white)
     puts "\nresults of round #{@board.number_of_rounds}: \n"
     matches = @board.positions
     if @board.positions == @codemaker.winning_code
       puts "you win. your code matched winning code of #{winning_code}"
+    elsif @board.positions[0] == @codemaker.winning_code[0]
+      @board.indicators[0] = indicator_color_and_position
+      #testing how indicators look
+      @board.indicators[1] = indicator_color_only
+      @board.indicators[2] = indicator_color_only
+      @board.indicators[3] = indicator_color_only
     end
   end
 end
