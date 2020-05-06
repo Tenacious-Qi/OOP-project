@@ -6,7 +6,7 @@ class CodeMaker
     @winning_code = []
   end
 
-  def generate_colors
+  def computer_generate_colors
     winning_code = []
     random_nums = []
     #prevent duplicates. only push to winning_code if color not present. ensure there are 4 colors randomly selected
@@ -36,5 +36,19 @@ class CodeMaker
     end
     @winning_code = winning_code
     winning_code
+  end
+
+  def human_generate_colors
+    puts "please select 4 of the following colors for the computer to guess:"
+    @colors.each { |color| puts "#{color}".colorize(:color => :light_white, :background => color.to_sym); puts "" }
+    i = 0
+    until @winning_code.count == 4
+      print "enter color at position #{i + 1}: "
+      selection = gets.chomp.downcase
+      @winning_code[i] = selection
+      i += 1
+    end
+    puts "the colors you chose for the computer to guess are:"
+    @winning_code.each { |color| puts "#{color}".colorize(:color => :light_white, :background => color.to_sym); puts "" }
   end
 end

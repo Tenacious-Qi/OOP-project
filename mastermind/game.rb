@@ -8,8 +8,24 @@ class Game
     @game_over = false
     @board = Board.new([], [])
     @codemaker = CodeMaker.new(["red", "green", "magenta", "yellow", "blue", "black"])
-    @codemaker.generate_colors
-    guess
+    make_code_or_break_code
+  end
+
+  def make_code_or_break_code
+    puts "would you like to be the codemaker or the codebreaker?"
+    puts "enter B to break the code, or M to make the code"
+    choice = gets.chomp.upcase
+    until choice == "B" || choice == "M"
+      puts "please enter B or M:"
+      choice = gets.chomp.upcase
+    end
+    if choice == "B"
+      @codemaker.computer_generate_colors
+      human_break_code
+    else
+      @codemaker.human_generate_colors
+      #computer_break_code
+    end
   end
 
   def self.color_choices
@@ -51,7 +67,7 @@ Indicator symbols will appear on the left as you play:
     HEREDOC
   end
   
-  def guess
+  def human_break_code
     #after four colors are placed, increment @number_of_rounds by 1. 
     #display board with positions updated to show colors
     show_message
@@ -130,7 +146,7 @@ Indicator symbols will appear on the left as you play:
   def start_new_game
     @board.number_of_rounds = 0
     reset_positions
-    @codemaker.generate_colors
-    guess
+    @codemaker.computer_generate_colors
+    make_code_or_break_code
   end
 end
