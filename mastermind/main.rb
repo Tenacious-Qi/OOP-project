@@ -3,6 +3,8 @@ require 'colorize'
 class Board
   attr_accessor :positions, :indicators, :colors_placed, :number_of_rounds
 
+  @@indicator_pegs = []
+
   def initialize(positions, indicators)
     @positions = positions
     @indicators = indicators
@@ -11,15 +13,8 @@ class Board
   end
   
   def display
-
-    puts <<-HEREDOC
-
-    #{indicators[0]} #{indicators[1]}
-    #{indicators[2]} #{indicators[3]} { one: #{positions[0].to_s.colorize(:color => :light_white, :background => Game.color_choices[0])} | two: #{positions[1].to_s.colorize(:color => :light_white, :background => Game.color_choices[1])} | three: #{positions[2].to_s.colorize(:color => :light_white, :background => Game.color_choices[2])} | four: #{positions[3].to_s.colorize(:color => :light_white, :background => Game.color_choices[3])} }
-
-
-
-    HEREDOC
+    puts  "{ one: #{positions[0].to_s.colorize(:color => :light_white, :background => Game.color_choices[0])} | two: #{positions[1].to_s.colorize(:color => :light_white, :background => Game.color_choices[1])} | three: #{positions[2].to_s.colorize(:color => :light_white, :background => Game.color_choices[2])} | four: #{positions[3].to_s.colorize(:color => :light_white, :background => Game.color_choices[3])} }\n"
+    puts
   end
 
   def increment_number_of_rounds
@@ -70,7 +65,7 @@ class CodeMaker
 end
 
 class Game
-  #used for purpse of colorizing chosen colors each round
+  #used for purpose of colorizing chosen colors each round
   @@color_choices = [] 
 
   def initialize(codemaker, board)
@@ -93,12 +88,21 @@ class Game
 
     Welcome to Mastermind!
 
-  # From a selection of 6 colors, computer has generated a sequence of 4 different colors at four positions. 
-  # Colors do not repeat.
+  # From a selection of 6 colors, computer has generated a sequence of 4 different colors at four positions.
+
+  # Colors do not repeat. Only enter a color once per round.
+
   # Try to match your colors to the computer's generated code.
-  # You have ten rounds to solve the puzzle.
-  # Code will revealed upon playing 10 rounds or solving the puzzle, whichever comes first.
+
+  # You have 12 rounds to solve the puzzle.
+
+  # Code will revealed upon playing 12 rounds or solving the puzzle, whichever comes first.
+
   # Good luck!
+
+   #{"@".colorize(:background => :light_red, :color => :light_white)} = a chosen color exists in code and is in correct position
+
+   #{"@".colorize(:background => :white, :color => :light_black)} = a chosen color exists in code but is in wrong position
 
 
     HEREDOC
@@ -120,7 +124,7 @@ class Game
     #after four colors are placed, increment @number_of_rounds by 1. 
     #display board with positions updated to show colors
     show_message
-    until @board.number_of_rounds == 10
+    until @board.number_of_rounds == 12
       round_complete = false
       i = 0
       until round_complete
@@ -139,7 +143,7 @@ class Game
       end
       reset_positions
     end
-    if @board.number_of_rounds == 10
+    if @board.number_of_rounds == 12
       @board.number_of_rounds = 0
       puts "Game over: winning code is #{@codemaker.winning_code}"
     end
@@ -159,23 +163,33 @@ class Game
   end
 
   def provide_feedback
+    puts "\nresult of round #{@board.number_of_rounds}:"
+    puts ""
+
     indicator_color_only = "@".colorize(:background => :white, :color => :light_black)
     indicator_color_and_position = "@".colorize(:background => :light_red, :color => :light_white)
-    puts "\nresults of round #{@board.number_of_rounds}: \n"
-    matches = @board.positions
-    if @board.positions == @codemaker.winning_code
-      puts "you win. your code matched winning code of #{winning_code}"
-      @board.indicators.each_with_index { |indicator, index| indicator[0] = indicator_color_and_position }
-    elsif @board.positions[0] == @codemaker.winning_code[0]
-      @board.indicators[0] = indicator_color_and_position
-      #testing how indicators look
-      @board.indicators[1] = indicator_color_only
-      @board.indicators[2] = indicator_color_only
-      @board.indicators[3] = indicator_color_only
+
+    exact_matches = @board.positions.select.each_with_index { |guess, index| guess == @codemaker.winning_code[index] }
+    partial_matches = @board.positions.select.each_with_index { |guess, index| @codemaker.winning_code.include?(guess) && @codemaker.winning_code[index] != guess }
+    if exact_matches.count == 4
+      puts "You win! Your code matched winning code of #{winning_code}"
+      puts ""
+      exit
+    end 
+
+    1.upto(exact_matches.count) do
+      @board.indicators << "@".colorize(:background => :light_red, :color => :light_white)
     end
+
+    1.upto(partial_matches.count) do
+      @board.indicators << "@".colorize(:background => :light_white, :color => :light_black)
+    end
+
+    @board.indicators.each { |indicator| print "#{indicator}  "}
+
   end
 end
 
-@board = Board.new([], ["", "", "", ""])
+@board = Board.new([], [])
 @codemaker = CodeMaker.new(["red", "green", "magenta", "yellow", "blue", "black"])
 @game = Game.new(@codemaker, @board)
