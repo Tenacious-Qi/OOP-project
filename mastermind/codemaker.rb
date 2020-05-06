@@ -5,7 +5,7 @@ class CodeMaker
     @colors = colors
     @winning_code = []
   end
-
+  
   def generate_colors
     winning_code = []
     random_nums = []

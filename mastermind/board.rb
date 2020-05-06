@@ -1,8 +1,6 @@
 class Board
   attr_accessor :positions, :indicators, :colors_placed, :number_of_rounds
 
-  @@indicator_pegs = []
-
   def initialize(positions, indicators)
     @positions = positions
     @indicators = indicators

@@ -1,5 +1,5 @@
 class Game
-  #used for purpose of colorizing chosen colors each round
+  #used for purpose of colorizing chosen colors each round.
   @@color_choices = [] 
 
   def initialize(codemaker, board)
@@ -9,17 +9,20 @@ class Game
     @board = Board.new([], [])
     @codemaker = CodeMaker.new(["red", "green", "magenta", "yellow", "blue", "black"])
     @codemaker.generate_colors
-    guess
+    break_code
   end
-
+  
+  #called in @board.display
   def self.color_choices
     @@color_choices
   end
 
-  def show_message
+  def show_rules
     puts <<-HEREDOC
+
     Welcome to Mastermind!
-  # From a selection of 6 colors, computer has generated a sequence of 4 different colors at four positions.
+
+  # Computer has generated a sequence of 4 different colors at four positions.
 
   # Colors do not repeat. Only enter a color once per round.
 
@@ -27,7 +30,7 @@ class Game
 
   # You have 12 rounds to solve the puzzle.
 
-  # Code will revealed upon playing 12 rounds or solving the puzzle, whichever comes first.
+  # Winning code will revealed upon playing 12 rounds or solving the puzzle, whichever comes first.
 
 Indicator symbols will appear on the left as you play:
 
@@ -50,11 +53,11 @@ Indicator symbols will appear on the left as you play:
   
     HEREDOC
   end
-  
-  def guess
+
+  def break_code
     #after four colors are placed, increment @number_of_rounds by 1. 
     #display board with positions updated to show colors
-    show_message
+    show_rules
     until @board.number_of_rounds == 12
       round_complete = false
       i = 0
@@ -131,6 +134,6 @@ Indicator symbols will appear on the left as you play:
     @board.number_of_rounds = 0
     reset_positions
     @codemaker.generate_colors
-    guess
+    break_code
   end
 end
