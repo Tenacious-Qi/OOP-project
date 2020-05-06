@@ -37,7 +37,7 @@ class CodeMaker
     #prevent duplicates. only push to winning_code if color not present. ensure there are 4 colors randomly selected
     until random_nums.count == 4
       random_num = (rand * 5).floor
-      print "#{random_num} "
+      # print "#{random_num} "
         case
         when random_num == 0 && !winning_code.include?(colors[0])
           random_nums << random_num
@@ -130,10 +130,17 @@ class Game
       until round_complete
         print "make a guess at position #{i + 1}: "
         color = gets.chomp.strip.downcase
-        @@color_choices << color.to_sym
-        @board.positions[i] = color
-        @board.colors_placed += 1
-        i += 1
+        until color.match?(/red|green|magenta|yellow|blue|black/) && !@board.positions.include?(color)
+          puts "\n## entry must match available colors (colors do not repeat)"
+          print "\nPlease enter a valid color for position #{i + 1}: "
+          color = gets.chomp.strip.downcase
+        end
+        if color.match?(/red|green|magenta|yellow|blue|black/)
+          @@color_choices << color.to_sym
+          @board.positions[i] = color
+          @board.colors_placed += 1
+          i += 1
+        end
         round_complete = true if @board.colors_placed == 4
       end
       if round_complete
@@ -174,14 +181,13 @@ class Game
     if exact_matches.count == 4
       puts "You win! Your code matched winning code of #{winning_code}"
       puts ""
-      exit
     end 
 
-    1.upto(exact_matches.count) do
+    0.upto(exact_matches.count - 1) do
       @board.indicators << "@".colorize(:background => :light_red, :color => :light_white)
     end
 
-    1.upto(partial_matches.count) do
+    0.upto(partial_matches.count - 1) do
       @board.indicators << "@".colorize(:background => :light_white, :color => :light_black)
     end
 
