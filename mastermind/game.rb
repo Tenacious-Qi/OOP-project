@@ -5,7 +5,6 @@ class Game
   def initialize(codemaker, board)
     @codemaker = codemaker
     @board = board
-    @game_over = false
     @board = Board.new([], [])
     @codemaker = CodeMaker.new(["red", "green", "magenta", "yellow", "blue", "black"])
     make_code_or_break_code
@@ -13,7 +12,7 @@ class Game
 
   def make_code_or_break_code
     puts "would you like to be the codemaker or the codebreaker?"
-    puts "enter B to break the code, or M to make the code"
+    print "enter B to break the code, or M to make the code: "
     choice = gets.chomp.upcase
     until choice == "B" || choice == "M"
       puts "please enter B or M:"
@@ -24,7 +23,7 @@ class Game
       human_break_code
     else
       @codemaker.human_generate_colors
-      #computer_break_code
+      computer_break_code
     end
   end
 
@@ -97,6 +96,22 @@ Indicator symbols will appear on the left as you play:
       end
       reset_positions
     end
+  end
+
+  def computer_break_code
+    puts "computer guesses 4 colors at random"
+    puts "computer stores exact guesses"
+    puts "continues guessing until guesses match @codemaker.winning_code"
+    puts "show how many rounds it took computer to solve"
+    i = 0
+    computer_guess = []
+    until computer_guess == @codemaker.winning_code
+      computer_guess = @codemaker.computer_generate_colors
+      puts "Result of computer guess #{i + 1}: #{computer_guess}"
+      i += 1
+    end
+    puts "computer made correct guess in #{i} rounds"
+
   end
 
   def provide_feedback
