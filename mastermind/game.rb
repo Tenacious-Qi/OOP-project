@@ -99,6 +99,7 @@ Indicator symbols will appear on the left as you play:
   end
 
   def computer_break_code
+    
     puts "computer guesses 4 colors at random"
     puts "computer stores exact guesses"
     puts "continues guessing until guesses match @codemaker.winning_code"
@@ -107,8 +108,8 @@ Indicator symbols will appear on the left as you play:
     computer_guess = []
     until computer_guess == @codemaker.winning_code
       computer_guess = @codemaker.computer_generate_colors
-      puts "Result of computer guess #{i + 1}: #{computer_guess}"
       i += 1
+      puts "Result of computer guess #{i}: #{computer_guess}"
     end
     puts "computer made correct guess in #{i} rounds"
 
