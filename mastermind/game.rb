@@ -98,22 +98,29 @@ Indicator symbols will appear on the left as you play:
     end
   end
 
+  # iterates over indices that don't match winning code.
+  # if one of computer's 4 guessed colors is included in winning_code, 
+  # only use winning code colors to guess until respective index equals the index of winning_code
+  # else guess from all available colors
   def computer_break_code
-    # Solution only iterates over indices that don't match winning code.
     computer_guess = @codemaker.computer_generate_colors
     i = 0
-    puts "initial computer_guess: #{computer_guess}\n"
+    puts "initial computer_guess: #{computer_guess}"
     until computer_guess == @codemaker.winning_code
       computer_guess.each_with_index do |guess, index|
         until computer_guess[index] == @codemaker.winning_code[index]
-          computer_guess[index] = @codemaker.colors[(rand * 6).floor]
-          puts "computer_guess[#{i}] for position #{index + 1}: #{computer_guess[index]}"
+          if @codemaker.winning_code.include?(guess)
+            computer_guess[index] = @codemaker.winning_code[(rand * 4).floor]
+          else
+            computer_guess[index] = @codemaker.colors[(rand * 6).floor]
+          end
+          puts "computer guess #{i + 1} for position #{index + 1}: #{computer_guess[index]}"
           i += 1
         end
       end
     end
-    computer_guess
     puts "computer made correct guess of #{computer_guess} after #{i} guesses"
+    computer_guess
   end
 
   def provide_feedback
