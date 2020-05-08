@@ -11,8 +11,10 @@ class Game
   end
 
   def make_code_or_break_code
-    puts "would you like to be the codemaker or the codebreaker?"
-    print "enter B to break the code, or M to make the code: "
+    show_message
+    puts "Would you like to be the codemaker or the codebreaker?"
+    puts ""
+    print "enter 'B' to break the code, or 'M' to make the code: "
     choice = gets.chomp.upcase
     until choice == "B" || choice == "M"
       puts "please enter B or M:"
@@ -20,8 +22,9 @@ class Game
     end
     if choice == "B"
       @codemaker.computer_generate_colors
+      show_color_choices
       human_break_code
-    else
+    elsif choice == "M"
       @codemaker.human_generate_colors
       computer_break_code
     end
@@ -33,27 +36,29 @@ class Game
 
   def show_message
     puts <<-HEREDOC
-    Welcome to Mastermind!
-  # From a selection of 6 colors, computer has generated a sequence of 4 different colors at four positions.
 
-  # Colors do not repeat. Only enter a color once per round.
+      #{"Welcome to Mastermind!".colorize(:cyan)}
 
-  # Try to match your colors to the computer's generated code.
+  # #{"Computer has generated a sequence of 4 different colors at 4 positions.".colorize(:red)}
 
-  # You have 12 rounds to solve the puzzle.
+  # #{"Colors do not repeat. Only enter a color once per round.".colorize(:red)}
 
-  # Code will revealed upon playing 12 rounds or solving the puzzle, whichever comes first.
+  # #{"Try to match your colors to the computer's generated code.".colorize(:red)}
 
-Indicator symbols will appear on the left as you play:
+  # #{"You have 12 rounds to solve the puzzle.".colorize(:red)}
+
+  # #{"Code will revealed upon playing 12 rounds or solving the puzzle, whichever comes first.".colorize(:red)}
+
+#{"Indicator symbols will appear on the left as you play:".colorize(:cyan)}
 
       #{"@".colorize(:background => :light_red, :color => :light_white)} = a chosen color exists in code and is in correct position
 
       #{"@".colorize(:background => :white, :color => :light_black)} = a chosen color exists in code but is in wrong position
 
-   Good luck!
+   #{"Good luck!".colorize(:cyan)}
+
     HEREDOC
 
-    show_color_choices
   end
 
   def show_color_choices
@@ -69,7 +74,6 @@ Indicator symbols will appear on the left as you play:
   def human_break_code
     #after four colors are placed, increment @number_of_rounds by 1. 
     #display board with positions updated to show colors
-    show_message
     until @board.number_of_rounds == 12
       round_complete = false
       i = 0
@@ -110,7 +114,7 @@ Indicator symbols will appear on the left as you play:
       computer_guess.each_with_index do |guess, index|
         until computer_guess[index] == @codemaker.winning_code[index]
           if @codemaker.winning_code.include?(guess)
-            computer_guess[index] = @codemaker.winning_code[(rand * 4).floor]
+            computer_guess[index] = @codemaker.winning_code[(rand * 4).floor] #unless computer_guess at index is at another index, then only guess from selection of 3 colors
           else
             computer_guess[index] = @codemaker.colors[(rand * 6).floor]
           end
@@ -120,6 +124,7 @@ Indicator symbols will appear on the left as you play:
       end
     end
     puts "computer made correct guess of #{computer_guess} after #{i} guesses"
+    prompt_to_play_again
     computer_guess
   end
 
@@ -168,9 +173,6 @@ Indicator symbols will appear on the left as you play:
   end
 
   def start_new_game
-    @board.number_of_rounds = 0
-    reset_positions
-    @codemaker.computer_generate_colors
-    make_code_or_break_code
+    @game = Game.new(@codemaker, @board)
   end
 end

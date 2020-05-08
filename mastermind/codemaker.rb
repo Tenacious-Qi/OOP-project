@@ -21,7 +21,8 @@ class CodeMaker
 
   def human_generate_colors
     @human_making_colors = true
-    puts "please select 4 of the following colors for the computer to guess:"
+    puts "please select 4 colors for the computer to guess:"
+    puts ""
     @colors.each { |color| puts "#{color}".colorize(:color => :light_white, :background => color.to_sym); puts "" }
     i = 0
     until @winning_code.count == 4
@@ -35,7 +36,7 @@ class CodeMaker
       @winning_code[i] = selection
       i += 1
     end
-    puts "the colors you chose for the computer to guess are:"
+    puts "the colors you chose for the computer to guess are:\n"
     @winning_code.each_with_index { |color, index| puts "#{index + 1}: #{color}".colorize(:color => :light_white, :background => color.to_sym); puts "" }
   end
   
