@@ -99,20 +99,21 @@ Indicator symbols will appear on the left as you play:
   end
 
   def computer_break_code
-    
-    puts "computer guesses 4 colors at random"
-    puts "computer stores exact guesses"
-    puts "continues guessing until guesses match @codemaker.winning_code"
-    puts "show how many rounds it took computer to solve"
+    # Solution only iterates over indices that don't match winning code.
+    computer_guess = @codemaker.computer_generate_colors
     i = 0
-    computer_guess = []
+    puts "initial computer_guess: #{computer_guess}\n"
     until computer_guess == @codemaker.winning_code
-      computer_guess = @codemaker.computer_generate_colors
-      i += 1
-      puts "Result of computer guess #{i}: #{computer_guess}"
+      computer_guess.each_with_index do |guess, index|
+        until computer_guess[index] == @codemaker.winning_code[index]
+          computer_guess[index] = @codemaker.colors[(rand * 6).floor]
+          puts "computer_guess[#{i}] for position #{index + 1}: #{computer_guess[index]}"
+          i += 1
+        end
+      end
     end
-    puts "computer made correct guess in #{i} rounds"
-
+    computer_guess
+    puts "computer made correct guess of #{computer_guess} after #{i} guesses"
   end
 
   def provide_feedback
