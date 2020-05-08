@@ -35,7 +35,7 @@ class Game
     @@color_choices
   end
 
-  def show_rules
+  def show_message
     puts <<-HEREDOC
 
       #{"Welcome to Mastermind!".colorize(:cyan)}
