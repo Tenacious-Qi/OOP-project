@@ -111,6 +111,7 @@ class Game
     computer_guess = @codemaker.computer_generate_colors
     i = 0
     puts "initial computer_guess: #{computer_guess}"
+    puts ""
     until computer_guess == @codemaker.winning_code
       computer_guess.each_with_index do |guess, index|
         until computer_guess[index] == @codemaker.winning_code[index]
@@ -124,6 +125,7 @@ class Game
         end
       end
     end
+    puts ""
     puts "computer made correct guess of #{computer_guess} after #{i} guesses"
     prompt_to_play_again
     computer_guess

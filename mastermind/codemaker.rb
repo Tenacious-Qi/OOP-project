@@ -36,7 +36,8 @@ class CodeMaker
       @winning_code[i] = selection
       i += 1
     end
-    puts "the colors you chose for the computer to guess are:\n"
+    puts "the colors you chose for the computer to guess are:"
+    puts ""
     @winning_code.each_with_index { |color, index| puts "#{index + 1}: #{color}".colorize(:color => :light_white, :background => color.to_sym); puts "" }
   end
   
