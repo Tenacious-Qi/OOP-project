@@ -48,7 +48,7 @@ class Game
 
   # #{"You have 12 rounds to solve the puzzle.".colorize(:red)}
 
-  # #{"Code will revealed upon playing 12 rounds or solving the puzzle, whichever comes first.".colorize(:red)}
+  # #{"Code will be revealed upon playing 12 rounds or solving the puzzle, whichever comes first.".colorize(:red)}
 
 #{"Indicator symbols will appear on the left as you play:".colorize(:cyan)}
 
