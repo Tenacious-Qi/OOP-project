@@ -116,7 +116,7 @@ class Game
       computer_guess.each_with_index do |guess, index|
         until computer_guess[index] == @codemaker.winning_code[index]
           if @codemaker.winning_code.include?(guess)
-            computer_guess[index] = @codemaker.winning_code[(rand * 4).floor] #unless computer_guess at index is at another index, then only guess from selection of 3 colors
+            computer_guess[index] = @codemaker.winning_code[(rand * 4).floor]
           else
             computer_guess[index] = @codemaker.colors[(rand * 6).floor]
           end
