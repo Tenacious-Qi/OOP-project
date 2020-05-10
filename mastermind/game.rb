@@ -128,7 +128,6 @@ class Game
     puts ""
     puts "computer made correct guess of #{computer_guess} after #{i} guesses"
     prompt_to_play_again
-    computer_guess
   end
 
   def provide_feedback
