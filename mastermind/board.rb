@@ -10,7 +10,7 @@ class Board
   
   def display
     puts  "{ one: #{positions[0].colorize(:color => :light_white, :background => Game.color_choices[0])} | two: #{positions[1].colorize(:color => :light_white, :background => Game.color_choices[1])} | three: #{positions[2].colorize(:color => :light_white, :background => Game.color_choices[2])} | four: #{positions[3].colorize(:color => :light_white, :background => Game.color_choices[3])} }\n"
-    puts
+    puts ""
   end
 
   def increment_number_of_rounds

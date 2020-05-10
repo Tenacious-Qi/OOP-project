@@ -15,7 +15,7 @@ class CodeMaker
         winning_code << @colors[random_num] unless winning_code.include?(@colors[random_num])
       end
     end
-    @winning_code = winning_code unless @human_making_colors
+    @winning_code = winning_code unless @human_making_colors #because this method is also used when computer is codebreaker to generate its initial guess
     winning_code
   end
 

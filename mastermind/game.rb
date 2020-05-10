@@ -1,12 +1,13 @@
 class Game
   #used for purpose of colorizing chosen colors each round.
-  @@color_choices = [] 
+  # @@color_choices = [] 
 
   def initialize(codemaker, board)
     @codemaker = codemaker
     @board = board
     @board = Board.new([], [])
     @codemaker = CodeMaker.new(["red", "green", "magenta", "yellow", "blue", "black"])
+    @@color_choices = []
     make_code_or_break_code
   end
 
@@ -50,13 +51,13 @@ class Game
 
   # #{"Code will be revealed upon playing 12 rounds or solving the puzzle, whichever comes first.".colorize(:red)}
 
-#{"Indicator symbols will appear on the left as you play:".colorize(:cyan)}
+Indicator symbols will appear on the left as you play:
 
       #{"@".colorize(:background => :light_red, :color => :light_white)} = a chosen color exists in code and is in correct position
 
       #{"@".colorize(:background => :white, :color => :light_black)} = a chosen color exists in code but is in wrong position
 
-   #{"Good luck!".colorize(:cyan)}
+   Good luck!
 
     HEREDOC
 
@@ -109,24 +110,40 @@ class Game
   # else guess from all available colors
   def computer_break_code
     computer_guess = @codemaker.computer_generate_colors
-    i = 0
-    puts "initial computer_guess: #{computer_guess}"
+    computer_guess.each { |guess| @@color_choices << guess.to_sym }
+    puts "initial computer_guess: "
     puts ""
+    @board.positions = computer_guess
+    @board.display
+    i = 0
     until computer_guess == @codemaker.winning_code
       computer_guess.each_with_index do |guess, index|
         until computer_guess[index] == @codemaker.winning_code[index]
           if @codemaker.winning_code.include?(guess)
             computer_guess[index] = @codemaker.winning_code[(rand * 4).floor]
+            @@color_choices << computer_guess[index].to_sym
           else
             computer_guess[index] = @codemaker.colors[(rand * 6).floor]
+            @@color_choices << computer_guess[index].to_sym
           end
-          puts "computer guess #{i + 1} for position #{index + 1}: #{computer_guess[index]}"
+          print "computer guess for position #{index + 1}: "
+          if computer_guess[index] == @codemaker.winning_code[index]
+            puts "#{computer_guess[index]}".colorize(:background => computer_guess[index].to_sym, :color => :light_white) + " **correct**"
+          else
+            puts "#{computer_guess[index]}".colorize(:background => computer_guess[index].to_sym, :color => :light_white)
+          end
           i += 1
         end
       end
+      #computer_guess now equals the winning_code. Update positions so @board.display works properly.
+      @board.positions = @codemaker.winning_code 
     end
+    @@color_choices = []
+    computer_guess.each { |guess| @@color_choices << guess.to_sym }
     puts ""
-    puts "computer made correct guess of #{computer_guess} after #{i} guesses"
+    puts "computer made correct guess after #{i} guesses: "
+    puts ""
+    @board.display
     prompt_to_play_again
   end
 
@@ -165,7 +182,8 @@ class Game
 
   def prompt_to_play_again
     puts ""
-    puts "play again? Enter Y or N"
+    puts "Play Again?" 
+    print "Enter Y or N: "
     answer = gets.chomp.upcase
     until answer == "Y" || answer == "N"
       puts "please enter Y or N:"
