@@ -69,7 +69,7 @@ class CodeBreaker
     puts "computer guessed correctly in #{i} rounds: "
     puts ""
     @board.display
-    @codemaker.prompt_to_play_again
+    Game.prompt_to_play_again
   end
 
   def reset_positions

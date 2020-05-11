@@ -5,4 +5,4 @@ require_relative 'codemaker.rb'
 require_relative 'game.rb'
 require_relative 'codebreaker.rb'
 
-@game = Game.new(@codemaker, @codebreaker, @board)
+game = Game.new(@codemaker, @codebreaker, @board)

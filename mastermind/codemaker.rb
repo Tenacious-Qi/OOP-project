@@ -71,7 +71,7 @@ class CodeMaker
     if exact_matches.count == 4
       print "You win! "
       @board.display
-      prompt_to_play_again
+      Game.prompt_to_play_again
     end 
     if @board.number_of_rounds == 12
       @board.number_of_rounds = 0
@@ -80,22 +80,7 @@ class CodeMaker
       print "# Winning code >> "
       @board.positions = @winning_code
       @board.display
-      prompt_to_play_again
+      Game.prompt_to_play_again
     end
-  end
-
-  def prompt_to_play_again
-    puts ""
-    print "# Play Again? Enter Y or N: "
-    answer = gets.chomp.upcase
-    until answer == "Y" || answer == "N"
-      puts "# please enter Y or N:"
-      answer = gets.chomp.upcase
-    end
-    answer == "Y" ? start_new_game : exit
-  end
-
-  def start_new_game
-    @game = Game.new(@codemaker, @codebreaker, @board)
   end
 end

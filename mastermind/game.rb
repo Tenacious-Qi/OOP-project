@@ -57,4 +57,19 @@ Indicator symbols will appear on the left as you play, showing you how good your
     HEREDOC
 
   end
+
+  def self.prompt_to_play_again
+    puts ""
+    print "# Play Again? Enter Y or N: "
+    answer = gets.chomp.upcase
+    until answer == "Y" || answer == "N"
+      puts "# please enter Y or N:"
+      answer = gets.chomp.upcase
+    end
+    answer == "Y" ? start_new_game : exit
+  end
+
+  def self.start_new_game
+    game = Game.new(@codemaker, @codebreaker, @board)
+  end
 end
