@@ -1,13 +1,10 @@
 class Game
-  #used for purpose of colorizing chosen colors each round.
-  # @@color_choices = [] 
 
   def initialize(codemaker, board)
     @codemaker = codemaker
     @board = board
     @board = Board.new([], [])
-    @codemaker = CodeMaker.new(["red", "green", "magenta", "yellow", "blue", "black"])
-    @@color_choices = []
+    @codemaker = CodeMaker.new(["red", "green", "magenta", "yellow", "blue", "black"], @board)
     make_code_or_break_code
   end
 
@@ -15,43 +12,39 @@ class Game
     show_message
     puts "Would you like to be the codemaker or the codebreaker?"
     puts ""
-    print "enter 'B' to break the code, or 'M' to make the code: "
+    print "# enter 'B' to break the code, or 'M' to make the code: "
     choice = gets.chomp.upcase
     until choice == "B" || choice == "M"
-      puts "please enter B or M:"
+      puts "# please enter B or M:"
       choice = gets.chomp.upcase
+      puts ""
     end
     if choice == "B"
       @codemaker.computer_generate_colors
-      show_color_choices
+      @codemaker.show_colors
       human_break_code
     elsif choice == "M"
       @codemaker.human_generate_colors
       computer_break_code
     end
   end
-  
-  #called in @board.display
-  def self.color_choices
-    @@color_choices
-  end
 
   def show_message
     puts <<-HEREDOC
 
-      #{"Welcome to Mastermind!".colorize(:cyan)}
+      Welcome to Mastermind!
 
-  # #{"Computer has generated a sequence of 4 different colors at 4 positions.".colorize(:red)}
+  # Computer has generated a code of 4 colors at 4 respective positions.
 
-  # #{"Colors do not repeat. Only enter a color once per round.".colorize(:red)}
+  # Try to match your colors to the computer's generated code.
 
-  # #{"Try to match your colors to the computer's generated code.".colorize(:red)}
+  # Colors do not repeat. Only enter a color once per round.
 
-  # #{"You have 12 rounds to solve the puzzle.".colorize(:red)}
+  # You have 12 rounds to solve the puzzle.
 
-  # #{"Code will be revealed upon playing 12 rounds or solving the puzzle, whichever comes first.".colorize(:red)}
+  # The winning code will be revealed upon playing 12 rounds or solving the puzzle, whichever comes first.
 
-Indicator symbols will appear on the left as you play:
+Indicator symbols will appear on the left as you play, showing you how good your guess was:
 
       #{"@".colorize(:background => :light_red, :color => :light_white)} = a chosen color exists in code and is in correct position
 
@@ -62,16 +55,6 @@ Indicator symbols will appear on the left as you play:
     HEREDOC
 
   end
-
-  def show_color_choices
-    puts <<-HEREDOC
-
-                      #{"red".colorize(:background => :red, :color => :light_white)} #{"green".colorize(:background => :green, :color => :light_white)} #{"magenta".colorize(:background => :magenta, :color => :light_white)}
-    Available colors:
-                      #{"yellow".colorize(:background => :yellow, :color => :light_white)} #{"blue".colorize(:background => :blue, :color => :light_white)} #{"black".colorize(:background => :black, :color => :light_white)}
-  
-    HEREDOC
-  end
   
   def human_break_code
     #after four colors are placed, increment @number_of_rounds by 1. 
@@ -80,7 +63,8 @@ Indicator symbols will appear on the left as you play:
       round_complete = false
       i = 0
       until round_complete
-        print "make a guess at position #{i + 1}: "
+        # puts ""
+        print "\nmake a guess at position #{i + 1}: "
         color = gets.chomp.strip.downcase
         until color.match?(/red|green|magenta|yellow|blue|black/) && !@board.positions.include?(color)
           puts "\n## entry must match available colors (colors do not repeat)"
@@ -88,7 +72,6 @@ Indicator symbols will appear on the left as you play:
           color = gets.chomp.strip.downcase
         end
         if color.match?(/red|green|magenta|yellow|blue|black/)
-          @@color_choices << color.to_sym
           @board.positions[i] = color
           @board.colors_placed += 1
           i += 1
@@ -110,21 +93,19 @@ Indicator symbols will appear on the left as you play:
   # else guess from all available colors
   def computer_break_code
     computer_guess = @codemaker.computer_generate_colors
-    computer_guess.each { |guess| @@color_choices << guess.to_sym }
     puts "initial computer_guess: "
     puts ""
     @board.positions = computer_guess
     @board.display
+    puts ""
     i = 0
     until computer_guess == @codemaker.winning_code
       computer_guess.each_with_index do |guess, index|
         until computer_guess[index] == @codemaker.winning_code[index]
           if @codemaker.winning_code.include?(guess)
             computer_guess[index] = @codemaker.winning_code[(rand * 4).floor]
-            @@color_choices << computer_guess[index].to_sym
           else
             computer_guess[index] = @codemaker.colors[(rand * 6).floor]
-            @@color_choices << computer_guess[index].to_sym
           end
           print "computer guess for position #{index + 1}: "
           if computer_guess[index] == @codemaker.winning_code[index]
@@ -135,14 +116,12 @@ Indicator symbols will appear on the left as you play:
           i += 1
         end
       end
-      #computer_guess now equals the winning_code. Update positions so @board.display works properly.
-      @board.positions = @codemaker.winning_code 
     end
-    @@color_choices = []
-    computer_guess.each { |guess| @@color_choices << guess.to_sym }
+
     puts ""
-    puts "computer made correct guess after #{i} guesses: "
+    puts "computer guessed correctly in #{i} rounds: "
     puts ""
+
     @board.display
     prompt_to_play_again
   end
@@ -163,12 +142,15 @@ Indicator symbols will appear on the left as you play:
     @board.indicators.each { |indicator| print "#{indicator}  "}
 
     if exact_matches.count == 4
-      puts "You win! Your code matched winning code of #{@codemaker.winning_code}"
+      print "You win! "
+      @board.display
       prompt_to_play_again
     end 
     if @board.number_of_rounds == 12
       @board.number_of_rounds = 0
-      puts "Game over: winning code is #{@codemaker.winning_code}\n"
+      puts "# Game over."
+      print "# Winning code: "
+      @board.display
       prompt_to_play_again
     end
   end
@@ -177,16 +159,14 @@ Indicator symbols will appear on the left as you play:
     @board.colors_placed = 0
     @board.positions = []
     @board.indicators = []
-    @@color_choices = []
   end
 
   def prompt_to_play_again
     puts ""
-    puts "Play Again?" 
-    print "Enter Y or N: "
+    print "# Play Again? Enter Y or N: "
     answer = gets.chomp.upcase
     until answer == "Y" || answer == "N"
-      puts "please enter Y or N:"
+      puts "# please enter Y or N:"
       answer = gets.chomp.upcase
     end
     answer == "Y" ? start_new_game : exit

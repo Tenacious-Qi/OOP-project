@@ -1,7 +1,8 @@
 class CodeMaker
   attr_accessor :colors, :winning_code
   
-  def initialize(colors)
+  def initialize(colors, board)
+    @board = board
     @colors = colors
     @winning_code = []
     @human_making_colors = false
@@ -21,12 +22,11 @@ class CodeMaker
 
   def human_generate_colors
     @human_making_colors = true
-    puts "please select 4 colors for the computer to guess:"
-    puts ""
-    @colors.each { |color| puts "#{color}".colorize(:color => :light_white, :background => color.to_sym); puts "" }
+    puts "please select 4 colors for the computer to guess."
+    show_colors
     i = 0
     until @winning_code.count == 4
-      print "enter color at position #{i + 1}: "
+      print "\nenter color at position #{i + 1}: "
       selection = gets.chomp.downcase
       until selection.match?(/red|green|magenta|yellow|blue|black/) && !winning_code.include?(selection)
         puts "\n## entry must match available colors (colors do not repeat)"
@@ -34,11 +34,21 @@ class CodeMaker
         selection = gets.chomp.downcase
       end
       @winning_code[i] = selection
+      @board.positions[i] = selection
       i += 1
     end
-    puts "the colors you chose for the computer to guess are:"
+    puts "\nthe colors you chose for the computer to guess are:"
     puts ""
-    @winning_code.each_with_index { |color, index| puts "#{index + 1}: #{color}".colorize(:color => :light_white, :background => color.to_sym); puts "" }
+    @board.display
+    puts ""
+  end
+
+  def show_colors
+    puts ""
+    puts "Available colors: "
+    puts "" 
+    @colors.each { |color| print "#{color}".colorize(:color => :light_white, :background => color.to_sym) + "  " }
+    puts ""
   end
   
 end

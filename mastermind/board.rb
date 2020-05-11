@@ -9,7 +9,7 @@ class Board
   end
   
   def display
-    puts  "{ one: #{positions[0].colorize(:color => :light_white, :background => Game.color_choices[0])} | two: #{positions[1].colorize(:color => :light_white, :background => Game.color_choices[1])} | three: #{positions[2].colorize(:color => :light_white, :background => Game.color_choices[2])} | four: #{positions[3].colorize(:color => :light_white, :background => Game.color_choices[3])} }\n"
+    @positions.each_with_index { |position, index| print "P#{index + 1}: #{position.colorize(:background => position.to_sym, :color => :light_white)}  " }
     puts ""
   end
 
