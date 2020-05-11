@@ -1,6 +1,7 @@
 class Board
-  attr_accessor :positions, :indicators, :colors_placed, :number_of_rounds
 
+  attr_accessor :positions, :indicators, :colors_placed, :number_of_rounds
+  
   def initialize(positions, indicators)
     @positions = positions
     @indicators = indicators
@@ -16,5 +17,4 @@ class Board
   def increment_number_of_rounds
     @number_of_rounds += 1
   end
-
 end
