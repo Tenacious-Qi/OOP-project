@@ -59,7 +59,7 @@ Indicator symbols will appear on the left as you play, showing you how good your
   def human_break_code
     #after four colors are placed, increment @number_of_rounds by 1. 
     #display board with positions updated to show colors
-    until @board.number_of_rounds == 12
+    until @board.number_of_rounds == 2
       round_complete = false
       i = 0
       until round_complete
@@ -127,6 +127,7 @@ Indicator symbols will appear on the left as you play, showing you how good your
   end
 
   def provide_feedback
+    puts @codemaker.winning_code
     puts "\nresult of round #{@board.number_of_rounds}:"
     puts ""
     exact_matches = @board.positions.select.each_with_index { |guess, index| guess == @codemaker.winning_code[index] }
@@ -146,10 +147,12 @@ Indicator symbols will appear on the left as you play, showing you how good your
       @board.display
       prompt_to_play_again
     end 
-    if @board.number_of_rounds == 12
+    if @board.number_of_rounds == 2
       @board.number_of_rounds = 0
-      puts "# Game over."
+      puts "Game over."
+      puts ""
       print "# Winning code: "
+      @board.positions = @codemaker.winning_code
       @board.display
       prompt_to_play_again
     end
