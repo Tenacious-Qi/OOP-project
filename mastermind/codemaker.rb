@@ -69,7 +69,7 @@ class CodeMaker
     @board.indicators.each { |indicator| print "#{indicator}  "}
 
     if exact_matches.count == 4
-      print "You win! "
+      print "You win! >> "
       @board.display
       Game.prompt_to_play_again
     end 
