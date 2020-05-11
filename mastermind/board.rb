@@ -17,4 +17,10 @@ class Board
   def increment_number_of_rounds
     @number_of_rounds += 1
   end
+
+  def reset_positions
+    @colors_placed = 0
+    @positions = []
+    @indicators = []
+  end
 end

@@ -31,7 +31,7 @@ class CodeBreaker
         @codemaker.provide_feedback
         @board.display
       end
-      reset_positions
+      @board.reset_positions
     end
   end
 
@@ -70,11 +70,5 @@ class CodeBreaker
     puts ""
     @board.display
     Game.prompt_to_play_again
-  end
-
-  def reset_positions
-    @board.colors_placed = 0
-    @board.positions = []
-    @board.indicators = []
   end
 end
