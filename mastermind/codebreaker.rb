@@ -15,7 +15,7 @@ class CodeBreaker
         print "\nmake a guess at position #{i + 1}: "
         color = gets.chomp.strip.downcase
         until color.match?(/^red$|^green$|^magenta$|^yellow$|^blue$|^black$/) && !@board.positions.include?(color)
-          puts "\n## entry must match available colors (colors do not repeat)"
+          puts '\n## entry must match available colors (colors do not repeat)'
           print "\nPlease enter a valid color for position #{i + 1}: "
           color = gets.chomp.strip.downcase
         end
@@ -41,11 +41,11 @@ class CodeBreaker
   # else guess from all available colors
   def computer_break_code
     computer_guess = @codemaker.computer_generate_colors
-    puts "initial computer_guess: "
-    puts ""
+    puts 'initial computer_guess: '
+    puts ''
     @board.positions = computer_guess
     @board.display
-    puts ""
+    puts ''
     i = 0
     until computer_guess == @codemaker.winning_code
       computer_guess.each_with_index do |guess, index|
@@ -57,17 +57,17 @@ class CodeBreaker
           end
           print "computer guess for position #{index + 1}: "
           if computer_guess[index] == @codemaker.winning_code[index]
-            puts "#{computer_guess[index]}".colorize(:background => computer_guess[index].to_sym, :color => :light_white) + " **correct**"
+            puts computer_guess[index].to_s.colorize(:background => computer_guess[index].to_sym, :color => :light_white) + " **correct**"
           else
-            puts "#{computer_guess[index]}".colorize(:background => computer_guess[index].to_sym, :color => :light_white)
+            puts computer_guess[index].to_s.colorize(:background => computer_guess[index].to_sym, :color => :light_white)
           end
           i += 1
         end
       end
     end
-    puts ""
-    puts "computer guessed correctly in #{i} rounds: "
-    puts ""
+    puts ''
+    puts 'computer guessed correctly in #{i} rounds: '
+    puts ''
     @board.display
     Game.prompt_to_play_again
   end
