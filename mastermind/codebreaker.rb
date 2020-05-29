@@ -66,7 +66,7 @@ class CodeBreaker
       end
     end
     puts ''
-    puts 'computer guessed correctly in #{i} rounds: '
+    puts "computer guessed correctly in #{i} rounds: "
     puts ''
     @board.display
     Game.prompt_to_play_again
