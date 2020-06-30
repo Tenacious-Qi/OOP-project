@@ -1,7 +1,7 @@
 class Board
 
   def initialize
-    @@cells = {0=>"1", 1=>"2", 2=>"3", 3=>"4", 4=>"5", 5=>"6", 6=>"7", 7=>"8", 8=>"9"}
+    @@cells = [1, 2, 3, 4, 5, 6, 7, 8, 9]
     show_positions
   end
 
@@ -15,12 +15,16 @@ class Board
     puts ""
   end
 
+  def winning_positions
+    [[0,1,2], [3,4,5], [6,7,8], [0,3,6], [1,4,7], [2,5,8], [0,4,8], [2,4,6]]
+  end
+
   def cells
     @@cells
   end
 
   def self.play(symbol, position)
-    if @@cells[position - 1].match?("X") || @@cells[position - 1].match?("O")
+    if @@cells[position - 1] == 'X' || @@cells[position - 1] == 'O'
       puts "ALERT: position taken, try again"
     else
       @@cells[position - 1] = symbol

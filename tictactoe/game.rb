@@ -37,7 +37,7 @@ class Game
       @player1.position = gets.chomp.to_i
     end
     @player1.play(@player1.position)
-    check_if_player_one_wins
+    check_who_wins
 
     if @player1.winner
       puts "Player 1 wins!"
@@ -55,7 +55,7 @@ class Game
     end
 
     @player2.play(@player2.position)
-    check_if_player_two_wins
+    check_who_wins
 
     if @player2.winner
       puts "Player 2 wins!"
@@ -63,37 +63,13 @@ class Game
     end
   end
 
-  def check_if_player_one_wins
-    win = ["X", "X", "X"] #@board.cells.values_at(0,1,2)
-    case
-    #rows
-    when @board.cells.values_at(0,1,2) == win then @player1.winner = true
-    when @board.cells.values_at(3,4,5) == win then @player1.winner = true
-    when @board.cells.values_at(6,7,8) == win then @player1.winner = true
-    #columns
-    when @board.cells.values_at(0,3,6) == win then @player1.winner = true
-    when @board.cells.values_at(1,4,7) == win then @player1.winner = true
-    when @board.cells.values_at(2,5,8) == win then @player1.winner = true
-    #diagonals
-    when @board.cells.values_at(0,4,8) == win then @player1.winner = true
-    when @board.cells.values_at(2,4,6) == win then @player1.winner = true
-    end
-  end
-
-  def check_if_player_two_wins
-    win = ["O", "O", "O"]
-    case
-    #rows
-    when @board.cells.values_at(0,1,2) == win then @player2.winner = true
-    when @board.cells.values_at(3,4,5) == win then @player2.winner = true
-    when @board.cells.values_at(6,7,8) == win then @player2.winner = true
-    #columns
-    when @board.cells.values_at(0,3,6) == win then @player2.winner = true
-    when @board.cells.values_at(1,4,7) == win then @player2.winner = true
-    when @board.cells.values_at(2,5,8) == win then @player2.winner = true
-    #diagonals
-    when @board.cells.values_at(0,4,8) == win then @player2.winner = true
-    when @board.cells.values_at(2,4,6) == win then @player2.winner = true
+  def check_who_wins
+    @board.winning_positions.each do |arr|
+      if @board.cells.values_at(arr[0], arr[1], arr[2]).all? { |v| v == 'X'}
+        @player1.winner = true
+      elsif @board.cells.values_at(arr[0], arr[1], arr[2]).all? { |v| v == 'O'}
+        @player2.winner = true
+      end
     end
   end
 end
