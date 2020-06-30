@@ -1,6 +1,8 @@
-class Player 
+# frozen_string_literal: true
+
+# tracks position of 'X' and 'O', contains boolean to determine winner
+class Player
   attr_accessor :winner, :number_of_turns, :position
-  attr_reader :number_of_turns
 
   def initialize(symbol)
     @symbol = symbol
