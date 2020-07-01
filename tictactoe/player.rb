@@ -1,19 +1,13 @@
 # frozen_string_literal: true
 
-# tracks position of 'X' and 'O', contains boolean to determine winner
+# tracks pos of 'X' and 'O', contains boolean to determine winner
 class Player
-  attr_accessor :winner, :number_of_turns, :position
+  attr_accessor :winner, :turns, :pos, :symbol
 
   def initialize(symbol)
     @symbol = symbol
+    @pos = 0
     @winner = false
-    @position = 0
-    @number_of_turns = 0
-  end
-
-  def play(position)
-    puts `clear`
-    Board.play(@symbol, position)
-    @number_of_turns += 1
+    @turns = 0
   end
 end

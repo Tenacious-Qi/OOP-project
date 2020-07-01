@@ -2,8 +2,10 @@
 
 # controls display of tic-tac-toe board and allows Players to mark itself
 class Board
+  attr_accessor :cells
+
   def initialize
-    @@cells = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+    @cells = [1, 2, 3, 4, 5, 6, 7, 8, 9]
     show_positions
   end
 
@@ -20,6 +22,8 @@ class Board
 
       7   8   9
 
+  Player 1 is 'X'. Player 2 is 'O'.
+
     HEREDOC
   end
 
@@ -30,28 +34,16 @@ class Board
     ]
   end
 
-  def cells
-    @@cells
-  end
-
-  def self.play(symbol, position)
-    if @@cells[position - 1] == 'X' || @@cells[position - 1] == 'O'
-      warn 'ALERT: position taken, try again'
-    else
-      @@cells[position - 1] = symbol
-    end
-    display
-  end
-
-  def self.display
+  def display
+    puts `clear`
     puts <<-HEREDOC
     Current Game:
 
-      #{@@cells[0]}   #{@@cells[1]}   #{@@cells[2]}
+      #{@cells[0]}   #{@cells[1]}   #{@cells[2]}
 
-      #{@@cells[3]}   #{@@cells[4]}   #{@@cells[5]}
+      #{@cells[3]}   #{@cells[4]}   #{@cells[5]}
 
-      #{@@cells[6]}   #{@@cells[7]}   #{@@cells[8]}
+      #{@cells[6]}   #{@cells[7]}   #{@cells[8]}
 
     HEREDOC
   end
