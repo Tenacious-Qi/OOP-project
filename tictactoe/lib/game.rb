@@ -5,18 +5,20 @@ class Game
   attr_accessor :board, :p1, :p2
 
   def initialize
-    @board = Board.new
     @p1 = Player.new('X')
     @p2 = Player.new('O')
-    play_game
+    @board = Board.new
+  end
+
+  def self.play_game
+    new.play_game
   end
 
   def play_game
-    until p1.winner || p2.winner
+    until over?
       p1_go
       p1.turns += 1
-      # first player always goes 5 times to fill the board
-      if p1.turns == 5
+      if over?
         puts 'game ended without a winner :-/'
         prompt_to_play_again
       end
@@ -24,11 +26,18 @@ class Game
     end
   end
 
+  def over?
+    # first player always goes 5 times to fill the board
+    return true if p1.turns == 5 || p1.winner || p2.winner
+
+    false
+  end
+
   def p1_go
     verify_p1_input
     pos_taken?(p1.pos) ? p1_go : board.cells[p1.pos - 1] = 'X'
     board.display
-    check_for_win
+    assign_winner
     declare_winner
   end
 
@@ -36,7 +45,7 @@ class Game
     verify_p2_input
     pos_taken?(p2.pos) ? p2_go : board.cells[p2.pos - 1] = 'O'
     board.display
-    check_for_win
+    assign_winner
     declare_winner
   end
 
@@ -62,20 +71,29 @@ class Game
     board.cells[position - 1].to_s.match?(/[XO]/)
   end
 
-  def check_for_win
-    @board.winning_positions.each do |arr|
-      if @board.cells.values_at(arr[0], arr[1], arr[2]).all?('X')
-        @p1.winner = true
-      elsif @board.cells.values_at(arr[0], arr[1], arr[2]).all?('O')
-        @p2.winner = true
-      end
+  def assign_winner
+    p1.winner = true if three_x?
+    p2.winner = true if three_o?
+  end
+
+  def three_x?
+    board.winning_positions.each do |arr|
+      return true if board.cells.values_at(arr[0], arr[1], arr[2]).all?('X') 
     end
+    false
+  end
+
+  def three_o?
+    board.winning_positions.each do |arr|
+      return true if board.cells.values_at(arr[0], arr[1], arr[2]).all?('O')
+    end
+    false
   end
 
   def declare_winner
     puts 'Player 1 wins!' if p1.winner
     puts 'Player 2 wins!' if p2.winner
-    prompt_to_play_again  if p1.winner || p2.winner
+    # prompt_to_play_again  if over?
   end
 
   def prompt_to_play_again
@@ -85,6 +103,6 @@ class Game
       puts 'please enter Y or N:'
       answer = gets.chomp.upcase
     end
-    answer.include?('Y') ? Game.new : exit
+    answer.match?(/[Y]/) ? Game.play_game : exit
   end
 end
