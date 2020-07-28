@@ -93,7 +93,7 @@ class Game
   def declare_winner
     puts 'Player 1 wins!' if p1.winner
     puts 'Player 2 wins!' if p2.winner
-    # prompt_to_play_again  if over?
+    prompt_to_play_again  if over?
   end
 
   def prompt_to_play_again

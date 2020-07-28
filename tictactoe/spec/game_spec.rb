@@ -3,7 +3,7 @@ require './lib/board.rb'
 require './lib/player.rb'
 
 describe Game do
-  subject(:game) { Game.new }
+  subject(:game) { described_class.new }
   subject(:board) { Board.new }
 
   describe '#over?' do
@@ -54,14 +54,12 @@ describe Game do
   describe '#assign_winner' do
     it 'assigns p1 as the winner when p1 has three in a sequence' do
       3.times { |n| game.board.cells[n] = 'X' }
-      p game.board.cells
       game.assign_winner
       expect(game.p1.winner).to be true
     end
 
     it 'assigns p2 as the winner when p2 has three in a sequence' do
       3.times { |n| game.board.cells[n] = 'O' }
-      p game.board.cells
       game.assign_winner
       expect(game.p2.winner).to be true
     end
@@ -83,8 +81,24 @@ describe Game do
   describe '#declare_winner' do
     it 'declares p1 the winner if they are assigned as the game winner' do
       game.p1.winner = true
+      allow(game).to receive(:prompt_to_play_again)
+      expect(game).to receive(:puts).once.with('Player 1 wins!')
       game.declare_winner
-      expect(Game).to receive(:puts).once.with('Player 1 wins!')
+    end
+
+    it 'declares p2 the winner if they are assigned as the game winner' do
+      game.p2.winner = true
+      allow(game).to receive(:prompt_to_play_again)
+      expect(game).to receive(:puts).once.with('Player 2 wins!')
+      game.declare_winner
+    end
+
+    context 'when game is over' do
+      it 'prompts to play again' do
+        game.p1.winner = true
+        expect(game).to receive(:prompt_to_play_again)
+        game.declare_winner
+      end
     end
   end
 end
