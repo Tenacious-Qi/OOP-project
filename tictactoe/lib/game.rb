@@ -11,6 +11,7 @@ class Game
   end
 
   def self.play_game
+    Board.show_positions
     new.play_game
   end
 

@@ -6,10 +6,9 @@ class Board
 
   def initialize
     @cells = [1, 2, 3, 4, 5, 6, 7, 8, 9]
-    show_positions
   end
 
-  def show_positions
+  def self.show_positions
     puts <<-HEREDOC
     
   Welcome to TicTacToe! We will enter numbers to mark positions on the board.
