@@ -100,10 +100,12 @@ class Game
       puts 'please enter Y or N:'
       answer = gets.chomp.upcase
     end
-    if answer.match?(/[Y]/)
-      next_game = Game.new
-      next_game.play_game
-    end
+    start_new_game if answer.match?(/[Y]/)
     exit
+  end
+
+  def start_new_game
+    next_game = Game.new
+    next_game.play_game
   end
 end
