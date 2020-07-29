@@ -12,7 +12,7 @@ class Game
   end
 
   def play_game
-    board.show_positions
+    # board.show_positions
     until over?
       @p1.turns += 1
       p1_go unless @p2.winner
