@@ -102,15 +102,4 @@ describe Game do
       end
     end
   end
-
-  describe '#prompt_to_play_again' do
-    context 'when answer is Y' do
-      xit 'starts a new game' do
-        allow(game).to receive(:puts).once.with('play again? Enter Y or N')
-        allow(:prompt_to_play_again).to receive(:gets).and_return('Y')
-        expect(Game).to receive(:play_game)
-        game.prompt_to_play_again
-      end
-    end
-  end
 end
