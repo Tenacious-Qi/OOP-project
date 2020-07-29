@@ -10,12 +10,8 @@ class Game
     @board = Board.new
   end
 
-  def self.play_game
-    Board.show_positions
-    new.play_game
-  end
-
   def play_game
+    board.show_positions
     until over?
       p1_go
       p1.turns += 1
@@ -104,6 +100,10 @@ class Game
       puts 'please enter Y or N:'
       answer = gets.chomp.upcase
     end
-    answer.match?(/[Y]/) ? Game.play_game : exit
+    if answer.match?(/[Y]/)
+      next_game = Game.new
+      next_game.play_game
+    end
+    exit
   end
 end

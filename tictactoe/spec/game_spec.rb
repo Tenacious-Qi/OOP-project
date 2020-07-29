@@ -82,14 +82,15 @@ describe Game do
     it 'declares p1 the winner if they are assigned as the game winner' do
       game.p1.winner = true
       allow(game).to receive(:prompt_to_play_again)
-      expect(game).to receive(:puts).once.with('Player 1 wins!')
+      # expect(game).to receive(:puts).once.with('Player 1 wins!')
+      expect{ game.declare_winner }.to output("Player 1 wins!\n").to_stdout
       game.declare_winner
     end
 
     it 'declares p2 the winner if they are assigned as the game winner' do
       game.p2.winner = true
       allow(game).to receive(:prompt_to_play_again)
-      expect(game).to receive(:puts).once.with('Player 2 wins!')
+      expect{ game.declare_winner }.to output("Player 2 wins!\n").to_stdout
       game.declare_winner
     end
 
@@ -98,6 +99,17 @@ describe Game do
         game.p1.winner = true
         expect(game).to receive(:prompt_to_play_again)
         game.declare_winner
+      end
+    end
+  end
+
+  describe '#prompt_to_play_again' do
+    context 'when answer is Y' do
+      xit 'starts a new game' do
+        allow(game).to receive(:puts).once.with('play again? Enter Y or N')
+        allow(:prompt_to_play_again).to receive(:gets).and_return('Y')
+        expect(Game).to receive(:play_game)
+        game.prompt_to_play_again
       end
     end
   end
