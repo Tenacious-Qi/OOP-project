@@ -12,10 +12,6 @@ class Player
   end
 
   def update_position(input)
-    until input.between?(1, 9)
-      puts 'Please enter a number between 1 and 9'
-      input = gets.chomp.to_i
-    end
     @turns += 1
     @pos = input
   end
