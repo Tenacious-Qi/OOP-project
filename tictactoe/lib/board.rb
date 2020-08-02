@@ -26,6 +26,28 @@ class Board
     HEREDOC
   end
 
+  def mark(pos, symbol)
+    cells[pos] = symbol
+  end
+
+  def pos_taken?(pos)
+    cells[pos - 1].to_s.match?(/[XO]/)
+  end
+
+  def three_x?
+    winning_positions.each do |arr|
+      return true if @cells.values_at(arr[0], arr[1], arr[2]).all?('X')
+    end
+    false
+  end
+
+  def three_o?
+    winning_positions.each do |arr|
+      return true if @cells.values_at(arr[0], arr[1], arr[2]).all?('O')
+    end
+    false
+  end
+
   def winning_positions
     [
       [0, 1, 2], [3, 4, 5], [6, 7, 8], [0, 3, 6],
@@ -34,7 +56,7 @@ class Board
   end
 
   def display
-    puts `clear`
+    clear_terminal
     puts <<-HEREDOC
     Current Game:
 
@@ -45,5 +67,9 @@ class Board
       #{@cells[6]}   #{@cells[7]}   #{@cells[8]}
 
     HEREDOC
+  end
+
+  def clear_terminal
+    puts `clear`
   end
 end

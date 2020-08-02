@@ -12,11 +12,9 @@ class Game
   end
 
   def play_game
-    # board.show_positions
     until over?
-      @p1.turns += 1
-      p1_go unless @p2.winner
-      p2_go unless over?
+      p1_turn unless @p2.winner
+      p2_turn unless over?
     end
   end
 
@@ -28,71 +26,34 @@ class Game
     @p1.turns == 5 && !@p1.winner && !@p2.winner
   end
 
-  def p1_go
-    verify_p1_input
-    pos_taken?(@p1.pos) ? p1_go : board.cells[@p1.pos - 1] = 'X'
-    board.display
-    assign_winner
-    declare_winner
-  end
-
-  def p2_go
-    verify_p2_input
-    pos_taken?(@p2.pos) ? p2_go : board.cells[@p2.pos - 1] = 'O'
-    board.display
-    assign_winner
-    declare_winner
-  end
-
-  def verify_p1_input
+  def p1_turn
     puts 'Player 1, please choose a position to mark:'
-    @p1.pos = gets.chomp.to_i
-    until @p1.pos.between?(1, 9)
-      puts 'Please enter a number between 1 and 9'
-      @p1.pos = gets.chomp.to_i
-    end
+    input = gets.chomp.to_i # need to create player method that verifies input
+    @p1.update_position(input)
+    @board.pos_taken?(input) ? p1_turn : @board.mark(input - 1, 'X')
+    @board.display
+    @p1.assign_winner if @board.three_x?
+    declare_winner
   end
 
-  def verify_p2_input
+  def p2_turn
     puts 'Player 2, please choose a position to mark:'
-    @p2.pos = gets.chomp.to_i
-    until @p2.pos.between?(1, 9)
-      puts 'Please enter a number between 1 and 9'
-      @p2.pos = gets.chomp.to_i
-    end
-  end
-
-  def pos_taken?(position)
-    board.cells[position - 1].to_s.match?(/[XO]/)
-  end
-
-  def assign_winner
-    @p1.winner = true if three_x?
-    @p2.winner = true if three_o?
-  end
-
-  def three_x?
-    board.winning_positions.each do |arr|
-      return true if board.cells.values_at(arr[0], arr[1], arr[2]).all?('X')
-    end
-    false
-  end
-
-  def three_o?
-    board.winning_positions.each do |arr|
-      return true if board.cells.values_at(arr[0], arr[1], arr[2]).all?('O')
-    end
-    false
+    input = gets.chomp.to_i
+    @p2.update_position(input)
+    @board.pos_taken?(input) ? p1_turn : @board.mark(input - 1, 'O')
+    @board.display
+    @p2.assign_winner if @board.three_o?
+    declare_winner
   end
 
   def declare_winner
+    puts 'game ended without a winner :-/' if tied?
     puts 'Player 1 wins!' if @p1.winner
     puts 'Player 2 wins!' if @p2.winner
     prompt_to_play_again  if over?
   end
 
   def prompt_to_play_again
-    puts 'game ended without a winner :-/' if tied?
     puts "\nplay again? Enter Y or N"
     answer = gets.chomp.upcase
     until answer.match?(/[YN]/)
