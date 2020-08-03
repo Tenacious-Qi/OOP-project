@@ -7,13 +7,13 @@ require_relative 'game.rb'
 game = Game.new
 game.board.show_positions
 
-start_new_game = proc do
-  game = Game.new
-  game.board.show_positions
-  game.play_game
-end
-
 loop do
   game.play_game
-  game.play_again ? start_new_game.call : exit
+  if game.play_again
+    game = Game.new
+    game.board.show_positions
+    game.play_game
+  else
+    exit
+  end
 end

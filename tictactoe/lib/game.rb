@@ -27,29 +27,25 @@ class Game
   end
 
   def p1_turn
-    puts 'Player 1, please choose a position to mark:'
-    input = gets.chomp.to_i # need to create player method that verifies input
-    @board.pos_taken?(input) ? p1_turn : @board.mark(input - 1, 'X')
+    puts 'Player 1, please mark an open position on the board:'
+    input = gets.chomp.to_i
+    valid?(input) ? @board.mark(input - 1, 'X') : p1_turn
     @board.display
     @p1.assign_winner if @board.three_x?
     declare_winner
   end
 
   def p2_turn
-    puts 'Player 2, please choose a position to mark:'
+    puts 'Player 2, please mark an open position on the board:'
     input = gets.chomp.to_i
-    @board.pos_taken?(input) ? p2_turn : @board.mark(input - 1, 'O')
+    valid?(input) ? @board.mark(input - 1, 'O') : p2_turn
     @board.display
     @p2.assign_winner if @board.three_o?
     declare_winner
   end
 
-  def verify(input)
-    until input.between?(1, 9)
-      puts 'Please enter a valid board position:'
-      input = gets.chomp.to_i
-    end
-    input
+  def valid?(input)
+    input.between?(1, 9) && @board.pos_taken?(input) == false
   end
 
   def declare_winner
