@@ -6,8 +6,8 @@ class Game
   attr_accessor :play_again
   
   def initialize
-    @p1 = Player.new('X')
-    @p2 = Player.new('O')
+    @p1 = Player.new
+    @p2 = Player.new
     @board = Board.new
     @play_again = false
   end

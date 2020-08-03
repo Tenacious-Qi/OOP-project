@@ -5,7 +5,7 @@ class Player
   attr_accessor :winner, :turns
   attr_writer :pos
 
-  def initialize(symbol)
+  def initialize
     @pos = 0
     @winner = false
     @turns = 0
