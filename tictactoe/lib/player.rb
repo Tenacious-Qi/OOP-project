@@ -2,10 +2,10 @@
 
 # tracks pos of 'X' and 'O', contains boolean to determine winner
 class Player
-  attr_accessor :winner, :turns, :pos, :symbol
+  attr_accessor :winner, :turns
+  attr_writer :pos
 
   def initialize(symbol)
-    @symbol = symbol
     @pos = 0
     @winner = false
     @turns = 0

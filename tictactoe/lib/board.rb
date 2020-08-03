@@ -2,8 +2,6 @@
 
 # controls display of tic-tac-toe board and allows Players to mark itself
 class Board
-  attr_accessor :cells
-
   def initialize
     @cells = [1, 2, 3, 4, 5, 6, 7, 8, 9]
   end
@@ -27,11 +25,11 @@ class Board
   end
 
   def mark(pos, symbol)
-    cells[pos] = symbol
+    @cells[pos] = symbol
   end
 
   def pos_taken?(pos)
-    cells[pos - 1].to_s.match?(/[XO]/)
+    @cells[pos - 1].to_s.match?(/[XO]/)
   end
 
   def three_x?

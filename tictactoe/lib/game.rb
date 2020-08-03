@@ -2,8 +2,9 @@
 
 # controls logic of tic-tac-toe
 class Game
-  attr_accessor :board, :p1, :p2, :play_again
-
+  attr_reader :p1, :p2, :board
+  attr_accessor :play_again
+  
   def initialize
     @p1 = Player.new('X')
     @p2 = Player.new('O')
@@ -30,6 +31,7 @@ class Game
     puts 'Player 1, please mark an open position on the board:'
     input = gets.chomp.to_i
     valid?(input) ? @board.mark(input - 1, 'X') : p1_turn
+    @p1.update_position(input)
     @board.display
     @p1.assign_winner if @board.three_x?
     declare_winner
@@ -39,6 +41,7 @@ class Game
     puts 'Player 2, please mark an open position on the board:'
     input = gets.chomp.to_i
     valid?(input) ? @board.mark(input - 1, 'O') : p2_turn
+    @p2.update_position(input)
     @board.display
     @p2.assign_winner if @board.three_o?
     declare_winner
