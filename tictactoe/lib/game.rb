@@ -31,9 +31,9 @@ class Game
     puts 'Player 1, please mark an open position on the board:'
     input = gets.chomp.to_i
     valid?(input) ? @board.mark(input - 1, 'X') : p1_turn
-    @p1.update_position(input)
+    @p1.increment_turns
     @board.display
-    @p1.assign_winner if @board.three_x?
+    assign_winner
     declare_winner
   end
 
@@ -41,15 +41,19 @@ class Game
     puts 'Player 2, please mark an open position on the board:'
     input = gets.chomp.to_i
     valid?(input) ? @board.mark(input - 1, 'O') : p2_turn
-    @p2.update_position(input)
     @board.display
-    @p2.assign_winner if @board.three_o?
+    assign_winner
     declare_winner
   end
 
   def valid?(input)
     input.between?(1, 9) && @board.pos_taken?(input) == false
   end
+
+  def assign_winner
+    @p1.assign_winner if @board.three_x?
+    @p2.assign_winner if @board.three_o?
+   end
 
   def declare_winner
     puts 'game ended without a winner :-/' if tied?
