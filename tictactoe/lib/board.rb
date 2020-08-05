@@ -2,6 +2,7 @@
 
 # controls display of tic-tac-toe board and allows Players to mark itself
 class Board
+  attr_reader :cells
   def initialize
     @cells = [1, 2, 3, 4, 5, 6, 7, 8, 9]
   end
@@ -33,20 +34,14 @@ class Board
   end
 
   def three_x?
-    winning_positions.each do |arr|
-      return true if @cells.values_at(arr[0], arr[1], arr[2]).all?('X')
-    end
-    false
+    win_lines.any? { |w| @cells.values_at(w[0], w[1], w[2]).all?('X') }
   end
 
   def three_o?
-    winning_positions.each do |arr|
-      return true if @cells.values_at(arr[0], arr[1], arr[2]).all?('O')
-    end
-    false
+    win_lines.any? { |w| @cells.values_at(w[0], w[1], w[2]).all?('O') }
   end
 
-  def winning_positions
+  def win_lines
     [
       [0, 1, 2], [3, 4, 5], [6, 7, 8], [0, 3, 6],
       [1, 4, 7], [2, 5, 8], [0, 4, 8], [2, 4, 6]

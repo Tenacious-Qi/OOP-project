@@ -3,11 +3,9 @@ require './lib/board.rb'
 require './lib/player.rb'
 
 describe Game do
-
   subject(:game) { described_class.new }
 
   describe '#p1_turn' do
-
     selected_position = '1'
 
     before do
@@ -30,13 +28,11 @@ describe Game do
   end
 
   describe '#assign_winner' do
-
     context 'when there are three X on the board' do
-  
       before do
         allow(game.board).to receive(:three_x?).and_return(true)
       end
-  
+
       it 'tells @p1 to assign itself the winner of the game' do
         expect(game.p1).to receive(:assign_winner)
         game.assign_winner
@@ -44,7 +40,6 @@ describe Game do
     end
 
     context 'when there are three O on the board' do
-
       before do
         allow(game.board).to receive(:three_o?).and_return(true)
       end
@@ -52,6 +47,26 @@ describe Game do
       it 'tells @p2 to assign itself the winner of the game' do
         expect(game.p2).to receive(:assign_winner)
         game.assign_winner
+      end
+    end
+
+    context 'when there are NOT three X on the board' do
+      before do
+        allow(game.board).to receive(:three_x?).and_return(false)
+      end
+
+      it 'does NOT tell @p1 to assign itself the winner of the game' do
+        expect(game.p1).not_to receive(:assign_winner)
+      end
+    end
+
+    context 'when there are NOT three O on the board' do
+      before do
+        allow(game.board).to receive(:three_o?).and_return(false)
+      end
+
+      it 'does NOT tell @p2 to assign itself the winner of the game' do
+        expect(game.p2).not_to receive(:assign_winner)
       end
     end
   end

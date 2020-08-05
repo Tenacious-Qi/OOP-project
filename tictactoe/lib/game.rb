@@ -4,7 +4,6 @@
 class Game
   attr_reader :p1, :p2, :board
   attr_accessor :play_again
-  
   def initialize
     @p1 = Player.new
     @p2 = Player.new
@@ -53,7 +52,7 @@ class Game
   def assign_winner
     @p1.assign_winner if @board.three_x?
     @p2.assign_winner if @board.three_o?
-   end
+  end
 
   def declare_winner
     puts 'game ended without a winner :-/' if tied?
