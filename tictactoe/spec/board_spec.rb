@@ -12,7 +12,7 @@ describe Board do
       end
 
       it 'updates the respective @cells position with X' do
-        expect(board.cells).to eq(['X', 2, 3, 4, 5, 6, 7, 8, 9])
+        expect(board.instance_variable_get(:@cells)).to eq(['X', 2, 3, 4, 5, 6, 7, 8, 9])
       end
     end
 
@@ -24,7 +24,7 @@ describe Board do
       end
 
       it 'updates the respective @cells position with O' do
-        expect(board.cells).to eq([1, 2, 3, 'O', 5, 6, 7, 8, 9])
+        expect(board.instance_variable_get(:@cells)).to eq([1, 2, 3, 'O', 5, 6, 7, 8, 9])
       end
     end
   end
